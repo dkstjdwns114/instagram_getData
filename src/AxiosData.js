@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import GetData from "./GetData";
+import Post from "./Post";
 
 function AxiosData() {
   const [jsonData, setData] = useState(null);
@@ -30,7 +30,7 @@ function AxiosData() {
   if (!jsonData) return null;
   return (
     <>
-      <GetData jsonData={jsonData} />
+      <Post jsonData={jsonData} />
     </>
   );
 }

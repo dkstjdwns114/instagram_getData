@@ -1,12 +1,14 @@
 import React from "react";
 
-export default function Profile({ profile_image, id }) {
+export default function Profile({ profile_image, username }) {
   return (
     <div>
-      <a href={"/profileDetail/" + id}>
-        <img src={profile_image} alt={`${id} 프로필 이미지`} />
+      <a href={"/profileDetail/" + username}>
+        <img src={profile_image} alt={`${username} 프로필 이미지`} />
       </a>
-      <a href={"/profileDetail/" + id}>{`←${id}의 프로필사진`}</a>
+      <span>
+        <a href={"/profileDetail/" + username}>{`←${username}`}</a>의 프로필사진
+      </span>
     </div>
   );
 }
