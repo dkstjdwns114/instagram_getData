@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PostData from "./data.json";
 import Profile from "./Profile";
 import ProfileDetailThumbnails from "./ProfileDetailThumbnails";
 import axios from "axios";

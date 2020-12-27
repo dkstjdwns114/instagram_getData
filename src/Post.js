@@ -17,6 +17,25 @@ export default function Post({ jsonData }) {
   });
   let ovEdges = Object.values(jsonEdges[0]);
 
+  let thumbnails = ovEdges.map((test, index) => {
+    if (test.node.edge_sidecar_to_children === undefined) {
+      return test.node.display_url;
+    } else {
+      return test.node.edge_sidecar_to_children.edges;
+    }
+  });
+  let childImg = [];
+  thumbnails.map((test, idx) => {
+    if (typeof test === "object") {
+      test.map((image) => {
+        childImg[idx] += image.node.display_url + " ";
+      });
+    } else {
+      childImg[idx] += test;
+    }
+    childImg[idx] = childImg[idx].substr(9);
+  });
+
   let likeCnt = ovEdges.map((edges, idx) => {
     return edges.node.edge_liked_by.count;
   });
@@ -52,8 +71,8 @@ export default function Post({ jsonData }) {
               profile_image={profileImg}
               username={jsonGraphql[0].username}
             />
-            {/* <ThumbnailContents photo_thumbnails={post_list.photo_thumbnails} />
-            <a href={"/postDetail/" + post_list.idx}>게시물 상세보기</a> */}
+            <ThumbnailContents childImg={childImg[index]} />
+            {/* <a href={"/postDetail/" + post_list.idx}>게시물 상세보기</a> */}
             <br />
             <br />
             <ThumbnailText content={tnContents[index]} />

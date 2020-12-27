@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-export default function ThumbnailContents({ photo_thumbnails, isDetail }) {
+export default function ThumbnailContents({ childImg }) {
+  let trimChildImg = childImg.trim();
+
+  let splitChildImg = trimChildImg.split(" ");
   const [index, setIndex] = useState(0);
-  const images = Object.values(photo_thumbnails).map((image, index) => {
-    return image;
-  });
 
   const nextImage = () => {
-    if (index + 1 === images.length) return;
+    if (index + 1 === splitChildImg.length) return;
     setIndex(index + 1);
   };
   const prevImage = () => {
@@ -16,7 +16,8 @@ export default function ThumbnailContents({ photo_thumbnails, isDetail }) {
   };
   return (
     <div>
-      {images[index].type === "image" ? (
+      <img src={splitChildImg[index]} alt={`${index + 1}번 이미지`} />
+      {/* {images[index].type === "image" ? (
         <img src={images[index].thumbnails} alt={`${index + 1}번 이미지`} />
       ) : (
         <video controls loop muted width="140" height="140">
@@ -29,12 +30,12 @@ export default function ThumbnailContents({ photo_thumbnails, isDetail }) {
             <source src={images[index].thumbnails} type="video/mp4" />
           )}
         </video>
-      )}
+      )} */}
 
       <p>
         <button onClick={prevImage}>{"이전"}</button>
         <span>
-          {index + 1} / {images.length}
+          {index + 1} / {splitChildImg.length}
         </span>
         <button onClick={nextImage}>{"다음"}</button>
       </p>
