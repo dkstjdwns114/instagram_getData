@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 
+const imageSize = {
+  width: "50%",
+  height: "50%"
+};
+
 export default function ThumbnailContents({ childImg }) {
   let trimChildImg = childImg.trim();
 
@@ -16,7 +21,11 @@ export default function ThumbnailContents({ childImg }) {
   };
   return (
     <div>
-      <img src={splitChildImg[index]} alt={`${index + 1}번 이미지`} />
+      <img
+        src={splitChildImg[index]}
+        style={imageSize}
+        alt={`${index + 1}번 이미지`}
+      />
       {/* {images[index].type === "image" ? (
         <img src={images[index].thumbnails} alt={`${index + 1}번 이미지`} />
       ) : (
