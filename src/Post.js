@@ -21,10 +21,6 @@ export default function Post({ jsonData }) {
     return edges.node.edge_liked_by.count;
   });
 
-  let imgArr = ovEdges.map((edges) => {
-    return edges.node.display_url;
-  });
-
   let textEdges = ovEdges.map((edges) => {
     return edges.node.edge_media_to_caption.edges;
   });

@@ -1,22 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PostData from "./data.json";
 import Profile from "./Profile";
 import ProfileDetailThumbnails from "./ProfileDetailThumbnails";
+import axios from "axios";
 
 export default function ProfileDetail({ match }) {
-  let userProfile;
-  let detailThumbnails = [];
-  let postIdx = [];
-  PostData.post_list.map((post_list, index) => {
-    if (post_list.id === match.params.id) {
-      userProfile = (
-        <Profile profile_image={post_list.profile_image} id={post_list.id} />
-      );
-      postIdx.unshift(post_list.idx);
-      detailThumbnails.unshift({ post_list });
-    }
-    return userProfile;
+  const [jsonData, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setError(null);
+        setData(null);
+        setLoading(true);
+        const response = await axios.get(
+          "https://www.instagram.com/sooyaaa__/?__a=1"
+        );
+        setData(response.data);
+      } catch (e) {
+        setError(e);
+      }
+      setLoading(false);
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div>로딩중..</div>;
+  if (error) return <div>Error</div>;
+  if (!jsonData) return null;
+  let totalPostCnt;
+  let jsonGraphql = Object.values(jsonData.graphql);
+  let jsonEdges = jsonGraphql.map((graphql, idx) => {
+    totalPostCnt = graphql.edge_owner_to_timeline_media.count;
+    return graphql.edge_owner_to_timeline_media.edges;
   });
+  let profileImg = jsonGraphql.map((graphql, idx) => {
+    return graphql.profile_pic_url;
+  });
+  let imgArr = [];
+  let postIdx = [];
+  let ovEdges = Object.values(jsonEdges[0]);
+  ovEdges.map((edges) => {
+    imgArr.push(edges.node.thumbnail_src);
+    postIdx.push(edges.node.id);
+  });
+
   return (
     <div>
       <h4>
@@ -27,11 +57,12 @@ export default function ProfileDetail({ match }) {
         <a href="/">HOME</a>
       </h1>
       <h2>{match.params.id}의 ProfileDetail</h2>
-      {userProfile}
+      <Profile profile_image={profileImg} username={jsonGraphql[0].username} />
       <ProfileDetailThumbnails
-        userId={match.params.id}
-        userInfo={detailThumbnails}
+        username={jsonGraphql[0].username}
+        imgArr={imgArr}
         postDetailIdx={postIdx}
+        totalPostCnt={totalPostCnt}
       ></ProfileDetailThumbnails>
     </div>
   );
