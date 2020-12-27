@@ -4,6 +4,7 @@ import ProfileDetailThumbnails from "./ProfileDetailThumbnails";
 import axios from "axios";
 
 export default function ProfileDetail({ match }) {
+  // AxiosData() 반복
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,6 +30,8 @@ export default function ProfileDetail({ match }) {
   if (loading) return <div>로딩중..</div>;
   if (error) return <div>Error</div>;
   if (!jsonData) return null;
+  // ----------------
+
   let totalPostCnt;
   let jsonGraphql = Object.values(jsonData.graphql);
   let jsonEdges = jsonGraphql.map((graphql, idx) => {
@@ -39,11 +42,12 @@ export default function ProfileDetail({ match }) {
     return graphql.profile_pic_url;
   });
   let imgArr = [];
-  let postIdx = [];
+  let shortcode = [];
+
   let ovEdges = Object.values(jsonEdges[0]);
   ovEdges.map((edges) => {
     imgArr.push(edges.node.thumbnail_src);
-    postIdx.push(edges.node.id);
+    shortcode.push(edges.node.shortcode);
   });
 
   return (
@@ -55,14 +59,14 @@ export default function ProfileDetail({ match }) {
       <h1>
         <a href="/">HOME</a>
       </h1>
-      <h2>{match.params.id}의 ProfileDetail</h2>
+      <h2>{match.params.username}의 ProfileDetail</h2>
       <Profile profile_image={profileImg} username={jsonGraphql[0].username} />
       <ProfileDetailThumbnails
         username={jsonGraphql[0].username}
         imgArr={imgArr}
-        postDetailIdx={postIdx}
+        shortcode={shortcode}
         totalPostCnt={totalPostCnt}
-      ></ProfileDetailThumbnails>
+      />
     </div>
   );
 }

@@ -71,6 +71,12 @@ export default function Post({ jsonData }) {
     }
   });
 
+  let shortcode = [];
+
+  ovEdges.map((edges) => {
+    shortcode.push(edges.node.shortcode);
+  });
+
   return (
     <div>
       <h2>* 프로그램의 성능은 고려하지 않고 제작하였습니다. *</h2>
@@ -88,7 +94,16 @@ export default function Post({ jsonData }) {
               username={jsonGraphql[0].username}
             />
             <ThumbnailContents thumbnails={thumbnails[index]} />
-            {/* <a href={"/postDetail/" + post_list.idx}>게시물 상세보기</a> */}
+            <a
+              href={
+                "/postDetail/" +
+                jsonGraphql[0].username +
+                "/" +
+                shortcode[index]
+              }
+            >
+              게시물 상세보기
+            </a>
             <br />
             <br />
             <ThumbnailText content={tnContents[index]} />

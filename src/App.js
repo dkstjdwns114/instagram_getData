@@ -12,8 +12,16 @@ class App extends Component {
         <div className="App">
           <Switch>
             <Route exact path="/" component={AxiosData} />
-            <Route exact path="/profileDetail/:id" component={ProfileDetail} />
-            <Route exact path="/postDetail/:idx" component={PostDetail} />
+            <Route
+              exact
+              path="/profileDetail/:username"
+              component={ProfileDetail}
+            />
+            <Route
+              exact
+              path="/postDetail/:username/:shortcode"
+              component={PostDetail}
+            />
           </Switch>
         </div>
       </Router>

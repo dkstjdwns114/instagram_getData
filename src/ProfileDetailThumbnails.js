@@ -8,7 +8,7 @@ const imageSize = {
 export default function ProfileDetailThumbnails({
   username,
   imgArr,
-  postDetailIdx,
+  shortcode,
   totalPostCnt
 }) {
   let thumbnailList = [];
@@ -16,7 +16,10 @@ export default function ProfileDetailThumbnails({
   imgArr.map((thumbnailImage, index) => {
     (index + 1) % 3 === 0
       ? thumbnailList.push(
-          <a href={"/postDetail/" + postDetailIdx}>
+          <a
+            key={shortcode[index]}
+            href={"/postDetail/" + username + "/" + shortcode[index]}
+          >
             <img
               src={thumbnailImage}
               style={imageSize}
@@ -26,7 +29,10 @@ export default function ProfileDetailThumbnails({
           </a>
         )
       : thumbnailList.push(
-          <a href={"/postDetail/" + postDetailIdx}>
+          <a
+            key={shortcode[index]}
+            href={"/postDetail/" + username + "/" + shortcode[index]}
+          >
             <img
               src={thumbnailImage}
               style={imageSize}
@@ -38,7 +44,7 @@ export default function ProfileDetailThumbnails({
   return (
     <div>
       <p>총 게시물 : {totalPostCnt}개</p>
-      <p>받아온 게시물 : {postDetailIdx.length}개</p>
+      <p>받아온 게시물 : {shortcode.length}개</p>
       {thumbnailList}
     </div>
   );
