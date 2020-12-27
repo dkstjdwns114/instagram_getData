@@ -29,16 +29,19 @@ export default function ProfileDetailThumbnails({
           </a>
         )
       : thumbnailList.push(
-          <a
-            key={shortcode[index]}
-            href={"/postDetail/" + username + "/" + shortcode[index]}
-          >
-            <img
-              src={thumbnailImage}
-              style={imageSize}
-              alt={`${index + 1}번 이미지`}
-            />
-          </a>
+          <>
+            <a
+              key={shortcode[index]}
+              href={"/postDetail/" + username + "/" + shortcode[index]}
+            >
+              <img
+                src={thumbnailImage}
+                style={imageSize}
+                alt={`${index + 1}번 이미지`}
+              />
+            </a>
+            <span> </span>
+          </>
         );
   });
   return (

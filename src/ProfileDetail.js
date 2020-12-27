@@ -52,10 +52,7 @@ export default function ProfileDetail({ match }) {
 
   return (
     <div>
-      <h4>
-        이미지의 경우 이미지 클릭, 동영상의 경우 우측에 게시물 상세보기 클릭시
-        해당 게시물의 상세페이지로 이동합니다.
-      </h4>
+      <h4>이미지 클릭시 해당 게시물의 상세페이지로 이동합니다.</h4>
       <h1>
         <a href="/">HOME</a>
       </h1>
