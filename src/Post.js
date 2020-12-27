@@ -9,31 +9,44 @@ import Save from "./Save";
 
 export default function Post({ jsonData }) {
   let jsonGraphql = Object.values(jsonData.graphql);
+
   let profileImg = jsonGraphql.map((graphql, idx) => {
     return graphql.profile_pic_url;
   });
+
   let jsonEdges = jsonGraphql.map((graphql, idx) => {
     return graphql.edge_owner_to_timeline_media.edges;
   });
+
   let ovEdges = Object.values(jsonEdges[0]);
 
   let thumbnails = ovEdges.map((test, index) => {
-    if (test.node.edge_sidecar_to_children === undefined) {
+    if (
+      test.node.edge_sidecar_to_children === undefined &&
+      test.node.is_video === true
+    ) {
+      return "isVideo" + test.node.video_url;
+    } else if (
+      test.node.edge_sidecar_to_children === undefined &&
+      test.node.is_video === false
+    ) {
       return test.node.display_url;
     } else {
       return test.node.edge_sidecar_to_children.edges;
     }
   });
-  let childImg = [];
+
   thumbnails.map((test, idx) => {
     if (typeof test === "object") {
+      thumbnails[idx] = "";
       test.map((image) => {
-        childImg[idx] += image.node.display_url + " ";
+        if (image.node.is_video) {
+          thumbnails[idx] += "isVideo" + image.node.video_url + " ";
+        } else {
+          thumbnails[idx] += image.node.display_url + " ";
+        }
       });
-    } else {
-      childImg[idx] += test;
     }
-    childImg[idx] = childImg[idx].substr(9);
   });
 
   let likeCnt = ovEdges.map((edges, idx) => {
@@ -43,11 +56,13 @@ export default function Post({ jsonData }) {
   let textEdges = ovEdges.map((edges) => {
     return edges.node.edge_media_to_caption.edges;
   });
+
   let ovTextEdges = Object.values(textEdges);
 
   let thumbnailText = ovTextEdges.map((text, idx) => {
     return text[0];
   });
+
   let tnContents = thumbnailText.map((real, idx) => {
     if (real === undefined) {
       return "";
@@ -55,6 +70,7 @@ export default function Post({ jsonData }) {
       return real.node.text;
     }
   });
+
   return (
     <div>
       <h2>* 프로그램의 성능은 고려하지 않고 제작하였습니다. *</h2>
@@ -71,7 +87,7 @@ export default function Post({ jsonData }) {
               profile_image={profileImg}
               username={jsonGraphql[0].username}
             />
-            <ThumbnailContents childImg={childImg[index]} />
+            <ThumbnailContents thumbnails={thumbnails[index]} />
             {/* <a href={"/postDetail/" + post_list.idx}>게시물 상세보기</a> */}
             <br />
             <br />
