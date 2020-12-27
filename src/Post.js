@@ -9,10 +9,18 @@ import Save from "./Save";
 
 export default function Post({ jsonData }) {
   let jsonGraphql = Object.values(jsonData.graphql);
+  let profileImg = jsonGraphql.map((graphql, idx) => {
+    return graphql.profile_pic_url;
+  });
   let jsonEdges = jsonGraphql.map((graphql, idx) => {
     return graphql.edge_owner_to_timeline_media.edges;
   });
   let ovEdges = Object.values(jsonEdges[0]);
+
+  let likeCnt = ovEdges.map((edges, idx) => {
+    return edges.node.edge_liked_by.count;
+  });
+
   let imgArr = ovEdges.map((edges) => {
     return edges.node.display_url;
   });
@@ -21,6 +29,7 @@ export default function Post({ jsonData }) {
     return edges.node.edge_media_to_caption.edges;
   });
   let ovTextEdges = Object.values(textEdges);
+
   let thumbnailText = ovTextEdges.map((text, idx) => {
     return text[0];
   });
@@ -40,11 +49,11 @@ export default function Post({ jsonData }) {
       <h4>게시물 상세보기 클릭시 게시물 상세페이지로 이동합니다.</h4>
       <br />
       <h2>Instagram Feed</h2>
-      {jsonGraphql.map((graphql, index) => {
+      {ovEdges.map((node, index) => {
         return (
           <div key={index} style={{ borderBottom: "1px solid gray" }}>
             <Profile
-              profile_image={graphql.profile_pic_url}
+              profile_image={profileImg}
               username={jsonGraphql[0].username}
             />
             {/* <ThumbnailContents photo_thumbnails={post_list.photo_thumbnails} />
@@ -53,8 +62,8 @@ export default function Post({ jsonData }) {
             <br />
             <ThumbnailText content={tnContents[index]} />
             <br />
-            {/* <Like like={post_list.like_cnt} />
-            <Save />
+            <Like like={likeCnt[index]} />
+            {/* <Save />
             <Replies replies={post_list.replies} /> */}
           </div>
         );

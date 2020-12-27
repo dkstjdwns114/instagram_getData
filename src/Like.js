@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 const likeStyle = {
-  width: "80px",
-  height: "25px",
+  width: "120px",
+  height: "30px",
   border: "2px solid deeppink",
   cursor: "pointer"
 };
