@@ -53,6 +53,10 @@ export default function Post({ jsonData }) {
     return edges.node.edge_liked_by.count;
   });
 
+  let commentCnt = ovEdges.map((edges, idx) => {
+    return edges.node.edge_media_to_comment.count;
+  });
+
   let textEdges = ovEdges.map((edges) => {
     return edges.node.edge_media_to_caption.edges;
   });
@@ -109,8 +113,8 @@ export default function Post({ jsonData }) {
             <ThumbnailText content={tnContents[index]} />
             <br />
             <Like like={likeCnt[index]} />
-            {/* <Save />
-            <Replies replies={post_list.replies} /> */}
+            {/* <Save /> */}
+            <Replies replies={commentCnt[index]} />
           </div>
         );
       })}
