@@ -49,6 +49,10 @@ export default function PostDetail({ match }) {
 
   let ovEdges = Object.values(jsonEdges[0]);
 
+  let commentCnt = ovEdges.map((edges, idx) => {
+    return edges.node.edge_media_to_comment.count;
+  });
+
   let thumbnails = ovEdges.map((test, index) => {
     if (
       test.node.edge_sidecar_to_children === undefined &&
@@ -119,7 +123,7 @@ export default function PostDetail({ match }) {
         <ThumbnailContents thumbnails={thumbnails[index]} isDetail={true} />
       );
       postText = <ThumbnailText content={tnContents[index]} />;
-      // reply = <Replies replies={post_list.replies} />;
+      reply = <Replies replies={commentCnt[index]} />;
       like = <Like like={likeCnt[index]} />;
       // save = <Save />;
     }
