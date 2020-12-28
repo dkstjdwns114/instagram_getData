@@ -18,9 +18,7 @@ class Replies extends Component {
   handleInputChange(e) {
     let name = e.target.name;
     let value = e.target.value;
-    let userid = "admin";
-
-    this.setState({ [name]: { id: userid, reply: value } });
+    this.setState({ [name]: { reply: value } });
   }
   submitItem(e) {
     e.preventDefault();
