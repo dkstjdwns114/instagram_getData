@@ -4,6 +4,7 @@ import Profile from "./Profile";
 import Replies from "./replies";
 import ThumbnailContents from "./ThumbnailContents";
 import ThumbnailText from "./ThumbnailText";
+import Save from "./Save";
 
 export default function PostDetail({
   ovEdges,
@@ -34,8 +35,8 @@ export default function PostDetail({
                     />
                     <ThumbnailText content={tnContents[index]} />
                     <Like like={likeCnt[index]} />
+                    <Save />
                     <Replies replies={commentCnt[index]} />
-                    {/* <Save /> */}
                   </>
                 );
               }

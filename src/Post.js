@@ -24,6 +24,10 @@ export default function Post({
       </h4>
       <h4>게시물 상세보기 클릭시 게시물 상세페이지로 이동합니다.</h4>
       <h4>실제 인스타그램 데이터입니다.</h4>
+      <h5>
+        이 프로그램의 댓글쓰기, 좋아요, 저장 기능은 실제 인스타그램과 통신하지
+        않습니다.
+      </h5>
       <br />
       <h2>Instagram Feed</h2>
       {ovEdges.map((node, index) => {
@@ -39,7 +43,7 @@ export default function Post({
             <ThumbnailText content={tnContents[index]} />
             <br />
             <Like like={likeCnt[index]} />
-            {/* <Save /> */}
+            <Save />
             <Replies replies={commentCnt[index]} />
           </div>
         );
