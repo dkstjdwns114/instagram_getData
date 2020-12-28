@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import Post from "./Post";
-import ProfileDetail from "./ProfileDetail";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import PostDetail from "./PostDetail";
 import AxiosData from "./AxiosData";
 
 class App extends Component {
@@ -15,12 +12,12 @@ class App extends Component {
             <Route
               exact
               path="/profileDetail/:username"
-              component={ProfileDetail}
+              component={AxiosData}
             />
             <Route
               exact
               path="/postDetail/:username/:shortcode"
-              component={PostDetail}
+              component={AxiosData}
             />
           </Switch>
         </div>
