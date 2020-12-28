@@ -6,7 +6,7 @@ import Replies from "./replies";
 import Like from "./Like";
 import Save from "./Save";
 
-export default function Post({
+export default function MainFeed({
   ovEdges,
   profileImg,
   username,

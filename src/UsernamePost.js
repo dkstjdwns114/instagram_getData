@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Post from "./Post";
+import MainFeed from "./MainFeed";
 import ProfileDetail from "./ProfileDetail";
 import PostDetail from "./PostDetail";
 
-function AxiosData({ match }) {
+export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -143,7 +143,7 @@ function AxiosData({ match }) {
           if (match.path === "/") {
             return (
               <>
-                <Post
+                <MainFeed
                   ovEdges={ovEdges}
                   profileImg={profileImg}
                   username={username}
@@ -189,4 +189,3 @@ function AxiosData({ match }) {
     </div>
   );
 }
-export default AxiosData;

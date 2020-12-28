@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import AxiosData from "./AxiosData";
+import UsernamePost from "./UsernamePost";
 
 class App extends Component {
   render() {
@@ -8,16 +8,16 @@ class App extends Component {
       <Router>
         <div className="App">
           <Switch>
-            <Route exact path="/" component={AxiosData} />
+            <Route exact path="/" component={UsernamePost} />
             <Route
               exact
               path="/profileDetail/:username"
-              component={AxiosData}
+              component={UsernamePost}
             />
             <Route
               exact
               path="/postDetail/:username/:shortcode"
-              component={AxiosData}
+              component={UsernamePost}
             />
           </Switch>
         </div>
