@@ -7,6 +7,8 @@ export default function ProfileDetail({
   username,
   imgArr,
   shortcode,
+  followedCnt,
+  followingCnt,
   totalPostCnt
 }) {
   return (
@@ -21,6 +23,8 @@ export default function ProfileDetail({
         username={username}
         imgArr={imgArr}
         shortcode={shortcode}
+        followedCnt={followedCnt}
+        followingCnt={followingCnt}
         totalPostCnt={totalPostCnt}
       />
     </div>

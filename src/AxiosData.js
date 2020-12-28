@@ -24,6 +24,8 @@ function AxiosData({ match }) {
   let username;
   let imgArr = [];
   let totalPostCnt;
+  let followedCnt;
+  let followingCnt;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -126,6 +128,12 @@ function AxiosData({ match }) {
 
     // username
     username = jsonGraphql[0].username;
+
+    // 팔로워 수
+    followedCnt = jsonGraphql[0].edge_followed_by.count;
+
+    // 팔로잉 수
+    followingCnt = jsonGraphql[0].edge_follow.count;
   }
 
   return (
@@ -149,7 +157,6 @@ function AxiosData({ match }) {
             );
           } else if (match.path.substr(1, 10) === "postDetail") {
             let thisShortcode = match.params.shortcode;
-
             return (
               <PostDetail
                 ovEdges={ovEdges}
@@ -170,6 +177,8 @@ function AxiosData({ match }) {
                   username={username}
                   imgArr={imgArr}
                   shortcode={shortcode}
+                  followedCnt={followedCnt}
+                  followingCnt={followingCnt}
                   totalPostCnt={totalPostCnt}
                 />
               </>
