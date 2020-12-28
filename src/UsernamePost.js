@@ -3,6 +3,7 @@ import axios from "axios";
 import MainFeed from "./MainFeed";
 import ProfileDetail from "./ProfileDetail";
 import PostDetail from "./PostDetail";
+import HashtagPost from "./HashtagPost";
 
 export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
@@ -137,55 +138,54 @@ export default function UsernamePost({ match }) {
   }
 
   return (
-    <div>
-      <>
-        {(function () {
-          if (match.path === "/") {
-            return (
-              <>
-                <MainFeed
-                  ovEdges={ovEdges}
-                  profileImg={profileImg}
-                  username={username}
-                  thumbnails={thumbnails}
-                  shortcode={shortcode}
-                  tnContents={tnContents}
-                  likeCnt={likeCnt}
-                  commentCnt={commentCnt}
-                />
-              </>
-            );
-          } else if (match.path.substr(1, 10) === "postDetail") {
-            let thisShortcode = match.params.shortcode;
-            return (
-              <PostDetail
+    <>
+      <HashtagPost match={match} />
+      {(function () {
+        if (match.path === "/") {
+          return (
+            <>
+              <MainFeed
                 ovEdges={ovEdges}
                 profileImg={profileImg}
                 username={username}
                 thumbnails={thumbnails}
+                shortcode={shortcode}
                 tnContents={tnContents}
-                commentCnt={commentCnt}
                 likeCnt={likeCnt}
-                thisShortcode={thisShortcode}
+                commentCnt={commentCnt}
               />
-            );
-          } else if (match.path.substr(1, 13) === "profileDetail") {
-            return (
-              <>
-                <ProfileDetail
-                  profileImg={profileImg}
-                  username={username}
-                  imgArr={imgArr}
-                  shortcode={shortcode}
-                  followedCnt={followedCnt}
-                  followingCnt={followingCnt}
-                  totalPostCnt={totalPostCnt}
-                />
-              </>
-            );
-          }
-        })()}
-      </>
-    </div>
+            </>
+          );
+        } else if (match.path.substr(1, 10) === "postDetail") {
+          let thisShortcode = match.params.shortcode;
+          return (
+            <PostDetail
+              ovEdges={ovEdges}
+              profileImg={profileImg}
+              username={username}
+              thumbnails={thumbnails}
+              tnContents={tnContents}
+              commentCnt={commentCnt}
+              likeCnt={likeCnt}
+              thisShortcode={thisShortcode}
+            />
+          );
+        } else if (match.path.substr(1, 13) === "profileDetail") {
+          return (
+            <>
+              <ProfileDetail
+                profileImg={profileImg}
+                username={username}
+                imgArr={imgArr}
+                shortcode={shortcode}
+                followedCnt={followedCnt}
+                followingCnt={followingCnt}
+                totalPostCnt={totalPostCnt}
+              />
+            </>
+          );
+        }
+      })()}
+    </>
   );
 }
