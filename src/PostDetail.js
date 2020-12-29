@@ -19,9 +19,10 @@ export default function PostDetail({
   return (
     <div>
       <h1>
-        <a href="/">HOME</a>
+        <a href="/">HOME</a> <a href="/HashTag">HashTag</a>
       </h1>
       {ovEdges.map((edges, index) => {
+        console.log(username);
         return (
           <>
             {(function () {

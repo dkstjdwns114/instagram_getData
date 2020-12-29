@@ -9,6 +9,8 @@ export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchUsername, setSearchUsername] = useState();
+  const [inputValue, setInputValue] = useState("");
 
   let jsonGraphql;
   let profileImg;
@@ -27,6 +29,26 @@ export default function UsernamePost({ match }) {
   let totalPostCnt;
   let followedCnt;
   let followingCnt;
+  let response;
+
+  const sendTagname = (e) => {
+    setSearchUsername(inputValue);
+    setInputValue(searchUsername);
+  };
+
+  const handleInputChange = (e) => {
+    let value = e.target.value;
+    setInputValue(value);
+  };
+
+  const onEnterPress = (e) => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault();
+
+      setSearchUsername(inputValue);
+      setInputValue(searchUsername);
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,17 +56,25 @@ export default function UsernamePost({ match }) {
         setError(null);
         setData(null);
         setLoading(true);
-        const response = await axios.get(
-          "https://www.instagram.com/sooyaaa__/?__a=1"
-        );
+        if (match.path === "/") {
+          response = await axios.get(
+            `https://www.instagram.com/${searchUsername}/?__a=1`
+          );
+        } else {
+          response = await axios.get(
+            `https://www.instagram.com/meow91__/?__a=1`
+          );
+        }
+
         setData(response.data);
       } catch (e) {
         setError(e);
       }
       setLoading(false);
+      setInputValue(searchUsername);
     };
     fetchUsers();
-  }, []);
+  }, [searchUsername]);
 
   if (loading) return <div>로딩중..</div>;
   if (error) return <div>Error</div>;
@@ -139,7 +169,19 @@ export default function UsernamePost({ match }) {
 
   return (
     <>
-      <HashtagPost match={match} />
+      <p>↓검색하고싶은 인스타그램 아이디를 입력하세요↓</p>
+      <p>
+        <input
+          type="text"
+          name="getUsername"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={onEnterPress}
+          placeholder="아이디를 입력하세요"
+        />
+        <input type="button" value="Submit" onClick={sendTagname} />
+      </p>
+      <br />
       {(function () {
         if (match.path === "/") {
           return (

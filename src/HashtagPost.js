@@ -10,7 +10,7 @@ export default function HashtagPost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tagname, setTagname] = useState("턱걸이하는여자");
+  const [tagname, setTagname] = useState("미스코리아");
   const [inputValue, setInputValue] = useState("");
 
   let jsonGraphql;
@@ -125,6 +125,9 @@ export default function HashtagPost({ match }) {
     <div>
       <>
         <p>태그 파싱</p>
+        <h1>
+          <a href="/">HOME</a>
+        </h1>
         <p>
           <input
             type="text"
