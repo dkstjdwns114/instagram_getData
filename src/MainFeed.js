@@ -2,9 +2,9 @@ import React from "react";
 import Profile from "./Profile";
 import ThumbnailText from "./ThumbnailText";
 import ThumbnailContents from "./ThumbnailContents";
-import Replies from "./replies";
 import Like from "./Like";
 import Save from "./Save";
+import MainFeedReplies from "./MainFeedReplies";
 
 export default function MainFeed({
   ovEdges,
@@ -40,16 +40,14 @@ export default function MainFeed({
           <div key={index} style={{ borderBottom: "1px solid gray" }}>
             <Profile profile_image={profileImg} username={username} />
             <ThumbnailContents thumbnails={thumbnails[index]} />
-            <a href={"/postDetail/" + username + "/" + shortcode[index]}>
-              게시물 상세보기
-            </a>
+            <a href={"/postDetail/" + shortcode[index]}>게시물 상세보기</a>
             <br />
             <br />
             <ThumbnailText content={tnContents[index]} />
             <br />
             <Like like={likeCnt[index]} />
             <Save />
-            <Replies replies={commentCnt[index]} />
+            <MainFeedReplies replies={commentCnt[index]} />
           </div>
         );
       })}

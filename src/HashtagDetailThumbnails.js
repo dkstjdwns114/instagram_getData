@@ -11,10 +11,7 @@ export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
   imgArr.map((thumbnailImage, index) => {
     (index + 1) % 3 === 0
       ? thumbnailList.push(
-          <a
-            key={shortcode[index]}
-            href={"https://www.instagram.com/p/" + shortcode[index]}
-          >
+          <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
             <img
               src={thumbnailImage}
               style={imageSize}
@@ -25,10 +22,7 @@ export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
         )
       : thumbnailList.push(
           <>
-            <a
-              key={shortcode[index]}
-              href={"https://www.instagram.com/p/" + shortcode[index]}
-            >
+            <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
               <img
                 src={thumbnailImage}
                 style={imageSize}

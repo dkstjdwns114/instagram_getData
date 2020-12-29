@@ -3,7 +3,6 @@ import axios from "axios";
 import MainFeed from "./MainFeed";
 import ProfileDetail from "./ProfileDetail";
 import PostDetail from "./PostDetail";
-import HashtagPost from "./HashtagPost";
 
 export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
@@ -30,10 +29,17 @@ export default function UsernamePost({ match }) {
   let followedCnt;
   let followingCnt;
   let response;
+  let jsonParentComment;
+  let ovJsonParentComment;
+  let comments = [];
+  let isAlonePost = false;
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
     setInputValue(searchUsername);
+    if (match.path.substr(1, 13) === "profileDetail") {
+      document.location.href = `/profileDetail/${inputValue}`;
+    }
   };
 
   const handleInputChange = (e) => {
@@ -45,8 +51,7 @@ export default function UsernamePost({ match }) {
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
 
-      setSearchUsername(inputValue);
-      setInputValue(searchUsername);
+      sendTagname();
     }
   };
 
@@ -60,12 +65,18 @@ export default function UsernamePost({ match }) {
           response = await axios.get(
             `https://www.instagram.com/${searchUsername}/?__a=1`
           );
+          setInputValue(searchUsername);
+        } else if (match.params.shortcode !== undefined) {
+          response = await axios.get(
+            `https://www.instagram.com/p/${match.params.shortcode}/?__a=1`
+          );
+          setInputValue(match.params.username);
         } else {
           response = await axios.get(
-            `https://www.instagram.com/meow91__/?__a=1`
+            `https://www.instagram.com/${match.params.username}/?__a=1`
           );
+          setInputValue(match.params.username);
         }
-
         setData(response.data);
       } catch (e) {
         setError(e);
@@ -80,7 +91,7 @@ export default function UsernamePost({ match }) {
   if (error) return <div>Error</div>;
   if (!jsonData) {
     return null;
-  } else {
+  } else if (jsonData && match.params.shortcode === undefined) {
     jsonGraphql = Object.values(jsonData.graphql);
 
     // 프로필 이미지
@@ -157,14 +168,66 @@ export default function UsernamePost({ match }) {
       shortcode.push(edges.node.shortcode);
     });
 
-    // username
-    username = jsonGraphql[0].username;
-
     // 팔로워 수
     followedCnt = jsonGraphql[0].edge_followed_by.count;
 
     // 팔로잉 수
     followingCnt = jsonGraphql[0].edge_follow.count;
+  } else if (match.params.shortcode !== undefined) {
+    jsonGraphql = Object.values(jsonData.graphql);
+
+    // 프로필 이미지
+    profileImg = jsonGraphql.map((graphql, idx) => {
+      username = graphql.owner.username;
+      return graphql.owner.profile_pic_url;
+    });
+
+    jsonEdges = jsonGraphql.map((graphql, idx) => {
+      likeCnt = graphql.edge_media_preview_like.count;
+      if (graphql.edge_sidecar_to_children !== undefined) {
+        return graphql.edge_sidecar_to_children.edges;
+      } else {
+        isAlonePost = true;
+        if (graphql.is_video) {
+          return "isVideo" + graphql.video_url;
+        } else {
+          return graphql.display_url;
+        }
+      }
+    });
+
+    jsonParentComment = jsonGraphql.map((graphql, idx) => {
+      commentCnt = graphql.edge_media_to_parent_comment.count;
+      return graphql.edge_media_to_parent_comment.edges;
+    });
+    ovJsonParentComment = Object.values(jsonParentComment[0]);
+
+    // 댓글
+    ovJsonParentComment.map((edges, idx) => {
+      comments.push({ id: edges.node.owner.username, reply: edges.node.text });
+    });
+
+    if (!isAlonePost) {
+      ovEdges = Object.values(jsonEdges[0]);
+      ovEdges.map((edges, idx) => {
+        if (edges.node.is_video) {
+          thumbnails += "isVideo" + edges.node.video_url + " ";
+        } else {
+          thumbnails += edges.node.display_url + " ";
+        }
+      });
+      thumbnails = thumbnails.substr(9);
+    } else {
+      thumbnails = jsonEdges[0];
+    }
+
+    tnContents = jsonGraphql.map((graphql, idx) => {
+      if (graphql.edge_media_to_caption.edges[0] === undefined) {
+        return "";
+      } else {
+        return graphql.edge_media_to_caption.edges[0].node.text;
+      }
+    });
   }
 
   return (
@@ -189,7 +252,7 @@ export default function UsernamePost({ match }) {
               <MainFeed
                 ovEdges={ovEdges}
                 profileImg={profileImg}
-                username={username}
+                username={searchUsername}
                 thumbnails={thumbnails}
                 shortcode={shortcode}
                 tnContents={tnContents}
@@ -202,14 +265,13 @@ export default function UsernamePost({ match }) {
           let thisShortcode = match.params.shortcode;
           return (
             <PostDetail
-              ovEdges={ovEdges}
               profileImg={profileImg}
               username={username}
               thumbnails={thumbnails}
               tnContents={tnContents}
+              comments={comments}
               commentCnt={commentCnt}
               likeCnt={likeCnt}
-              thisShortcode={thisShortcode}
             />
           );
         } else if (match.path.substr(1, 13) === "profileDetail") {
@@ -217,7 +279,7 @@ export default function UsernamePost({ match }) {
             <>
               <ProfileDetail
                 profileImg={profileImg}
-                username={username}
+                username={match.params.username}
                 imgArr={imgArr}
                 shortcode={shortcode}
                 followedCnt={followedCnt}

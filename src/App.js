@@ -17,7 +17,7 @@ class App extends Component {
             />
             <Route
               exact
-              path="/postDetail/:username/:shortcode"
+              path="/postDetail/:shortcode"
               component={UsernamePost}
             />
             <Route exact path="/HashTag" component={HashtagPost} />

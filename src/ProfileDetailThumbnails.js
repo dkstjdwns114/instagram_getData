@@ -6,7 +6,6 @@ const imageSize = {
 };
 
 export default function ProfileDetailThumbnails({
-  username,
   imgArr,
   shortcode,
   followedCnt,
@@ -18,10 +17,7 @@ export default function ProfileDetailThumbnails({
   imgArr.map((thumbnailImage, index) => {
     (index + 1) % 3 === 0
       ? thumbnailList.push(
-          <a
-            key={shortcode[index]}
-            href={"/postDetail/" + username + "/" + shortcode[index]}
-          >
+          <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
             <img
               src={thumbnailImage}
               style={imageSize}
@@ -32,10 +28,7 @@ export default function ProfileDetailThumbnails({
         )
       : thumbnailList.push(
           <>
-            <a
-              key={shortcode[index]}
-              href={"/postDetail/" + username + "/" + shortcode[index]}
-            >
+            <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
               <img
                 src={thumbnailImage}
                 style={imageSize}

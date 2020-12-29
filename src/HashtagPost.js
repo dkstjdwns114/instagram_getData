@@ -44,8 +44,7 @@ export default function HashtagPost({ match }) {
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
 
-      setTagname(inputValue);
-      setInputValue(tagname);
+      sendTagname();
     }
   };
 
@@ -137,7 +136,6 @@ export default function HashtagPost({ match }) {
   return (
     <div>
       <>
-        <p>태그 파싱</p>
         <h1>
           <a href="/">HOME</a>
         </h1>
@@ -155,11 +153,13 @@ export default function HashtagPost({ match }) {
         </p>
         <img src={profileImg} alert="태그 프로필" />
         <p>총 게시물 수 : {totalPostCnt}개</p>
+        <hr />
         <p>-- 인기게시물 --</p>
         <HashtagDetailThumbnails
           imgArr={topThumbnails}
           shortcode={topShortcode}
         />
+        <hr />
         <p>-- 최근게시물 --</p>
         <HashtagDetailThumbnails imgArr={thumbnails} shortcode={shortcode} />
       </>

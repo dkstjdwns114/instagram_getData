@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class Replies extends Component {
+class MainFeedReplies extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,15 +33,12 @@ class Replies extends Component {
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
 
-      //---------------------------
-      // 이부분에서 위에있는 submitItem을 호출하고싶다.
       let items = this.state.items;
       let item = this.state.item;
       items.push(item);
       this.setState({ items: items });
       this.setState({ item: { reply: "" } });
       this.setState({ commentCnt: this.state.commentCnt + 1 });
-      //----------------------------
     }
   }
 
@@ -64,4 +61,4 @@ class Replies extends Component {
     );
   }
 }
-export default Replies;
+export default MainFeedReplies;

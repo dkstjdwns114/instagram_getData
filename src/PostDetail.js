@@ -1,50 +1,32 @@
 import React from "react";
 import Like from "./Like";
 import Profile from "./Profile";
-import Replies from "./replies";
+import PostDetailReplies from "./PostDetailReplies";
 import ThumbnailContents from "./ThumbnailContents";
 import ThumbnailText from "./ThumbnailText";
 import Save from "./Save";
 
 export default function PostDetail({
-  ovEdges,
   profileImg,
   username,
   thumbnails,
   tnContents,
+  comments,
   commentCnt,
-  likeCnt,
-  thisShortcode
+  likeCnt
 }) {
   return (
     <div>
       <h1>
         <a href="/">HOME</a> <a href="/HashTag">HashTag</a>
       </h1>
-      {ovEdges.map((edges, index) => {
-        console.log(username);
-        return (
-          <>
-            {(function () {
-              if (edges.node.shortcode === thisShortcode) {
-                return (
-                  <>
-                    <Profile profile_image={profileImg} username={username} />
-                    <ThumbnailContents
-                      thumbnails={thumbnails[index]}
-                      isDetail={true}
-                    />
-                    <ThumbnailText content={tnContents[index]} />
-                    <Like like={likeCnt[index]} />
-                    <Save />
-                    <Replies replies={commentCnt[index]} />
-                  </>
-                );
-              }
-            })()}
-          </>
-        );
-      })}
+      <Profile profile_image={profileImg} username={username} />
+      <ThumbnailContents thumbnails={thumbnails} />
+      <ThumbnailText content={tnContents} />
+      <br />
+      <Like like={likeCnt} />
+      <Save />
+      <PostDetailReplies commentCnt={commentCnt} comments={comments} />
     </div>
   );
 }
