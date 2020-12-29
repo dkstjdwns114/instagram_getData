@@ -10,6 +10,8 @@ export default function HashtagPost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [tagname, setTagname] = useState("턱걸이하는여자");
+  const [inputValue, setInputValue] = useState("");
 
   let jsonGraphql;
   let profileImg;
@@ -28,6 +30,16 @@ export default function HashtagPost({ match }) {
   let followedCnt;
   let followingCnt;
 
+  const sendTagname = (e) => {
+    setTagname(inputValue);
+    setInputValue(tagname);
+  };
+
+  const handleInputChange = (e) => {
+    let value = e.target.value;
+    setInputValue(value);
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -35,16 +47,17 @@ export default function HashtagPost({ match }) {
         setData(null);
         setLoading(true);
         const response = await axios.get(
-          "https://www.instagram.com/explore/tags/턱걸이하는여자/?__a=1"
+          `https://www.instagram.com/explore/tags/${tagname}/?__a=1`
         );
         setData(response.data);
       } catch (e) {
         setError(e);
       }
       setLoading(false);
+      setInputValue(tagname);
     };
     fetchUsers();
-  }, []);
+  }, [tagname]);
 
   if (loading) return <div>로딩중..</div>;
   if (error) return <div>Error</div>;
@@ -112,7 +125,17 @@ export default function HashtagPost({ match }) {
     <div>
       <>
         <p>태그 파싱</p>
+        <p>
+          <input
+            type="text"
+            name="hashTag"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <input type="button" value="Submit" onClick={sendTagname} />
+        </p>
         <img src={profileImg} alert="태그 프로필" />
+
         <p>태그 총 게시물 수 : {totalPostCnt}개</p>
         <HashtagDetailThumbnails
           username={username}
