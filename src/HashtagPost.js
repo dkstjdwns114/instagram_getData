@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import MainFeed from "./MainFeed";
-import ProfileDetail from "./ProfileDetail";
-import PostDetail from "./PostDetail";
-import UsernamePost from "./UsernamePost";
 import HashtagDetailThumbnails from "./HashtagDetailThumbnails";
 
 export default function HashtagPost({ match }) {
@@ -19,16 +15,20 @@ export default function HashtagPost({ match }) {
   let totalPostCnt;
   let ovEdges;
   let thumbnails;
-  let commentCnt;
   let textEdges;
   let ovTextEdges;
   let thumbnailText;
   let tnContents;
   let shortcode = [];
-  let username = "haha";
-  let imgArr = [];
-  let followedCnt;
-  let followingCnt;
+
+  // 인기게시물
+  let ovTopEdges;
+  let topShortcode = [];
+  let topThumbnails;
+  let topTextEdges;
+  let topOvTextEdges;
+  let topThumbnailText;
+  let topTnContents;
 
   const sendTagname = (e) => {
     setTagname(inputValue);
@@ -38,6 +38,15 @@ export default function HashtagPost({ match }) {
   const handleInputChange = (e) => {
     let value = e.target.value;
     setInputValue(value);
+  };
+
+  const onEnterPress = (e) => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault();
+
+      setTagname(inputValue);
+      setInputValue(tagname);
+    }
   };
 
   useEffect(() => {
@@ -75,20 +84,11 @@ export default function HashtagPost({ match }) {
 
     ovEdges = hashTagData.edge_hashtag_to_media.edges;
 
-    // 게시물 Img/Video url
+    // 게시물 Img, shortcode
     thumbnails = ovEdges.map((test, index) => {
       shortcode.push(test.node.shortcode);
       return test.node.thumbnail_src;
     });
-
-    // // 좋아요 갯수
-    // likeCnt = ovEdges.map((edges, idx) => {
-    //   return edges.node.edge_liked_by.count;
-    // });
-    // // 댓글 갯수
-    // commentCnt = ovEdges.map((edges, idx) => {
-    //   return edges.node.edge_media_to_comment.count;
-    // });
 
     textEdges = ovEdges.map((edges) => {
       return edges.node.edge_media_to_caption.edges;
@@ -107,18 +107,31 @@ export default function HashtagPost({ match }) {
       }
     });
 
-    // ovEdges.map((edges) => {
-    //   // 게시물 imgArr
-    //   imgArr.push(edges.node.thumbnail_src);
-    //   // 게시물 shortcode
-    //   shortcode.push(edges.node.shortcode);
-    // });
-    // // username
-    // username = jsonGraphql[0].username;
-    // // 팔로워 수
-    // followedCnt = jsonGraphql[0].edge_followed_by.count;
-    // // 팔로잉 수
-    // followingCnt = jsonGraphql[0].edge_follow.count;
+    // ---- 인기게시물 ----
+    ovTopEdges = Object.values(hashTagData.edge_hashtag_to_top_posts.edges);
+
+    // 인기게시물 Img, shortcode
+    topThumbnails = ovTopEdges.map((test, index) => {
+      topShortcode.push(test.node.shortcode);
+      return test.node.thumbnail_src;
+    });
+
+    topTextEdges = ovTopEdges.map((edges) => {
+      return edges.node.edge_media_to_caption.edges;
+    });
+    topOvTextEdges = Object.values(topTextEdges);
+    topThumbnailText = topOvTextEdges.map((text, idx) => {
+      return text[0];
+    });
+
+    // 인기게시물 Text
+    topTnContents = topThumbnailText.map((real, idx) => {
+      if (real === undefined) {
+        return "";
+      } else {
+        return real.node.text;
+      }
+    });
   }
 
   return (
@@ -128,70 +141,27 @@ export default function HashtagPost({ match }) {
         <h1>
           <a href="/">HOME</a>
         </h1>
+        <p>↓검색하고싶은 태그를 입력하세요↓</p>
         <p>
           <input
             type="text"
             name="hashTag"
             value={inputValue}
             onChange={handleInputChange}
+            onKeyDown={onEnterPress}
+            placeholder="# 제외 단어를 입력하세요"
           />
           <input type="button" value="Submit" onClick={sendTagname} />
         </p>
         <img src={profileImg} alert="태그 프로필" />
-
-        <p>태그 총 게시물 수 : {totalPostCnt}개</p>
+        <p>총 게시물 수 : {totalPostCnt}개</p>
+        <p>-- 인기게시물 --</p>
         <HashtagDetailThumbnails
-          username={username}
-          imgArr={thumbnails}
-          shortcode={shortcode}
-          totalPostCnt={totalPostCnt}
+          imgArr={topThumbnails}
+          shortcode={topShortcode}
         />
-        {/* {(function () {
-          if (match.path === "/") {
-            return (
-              <>
-                <MainFeed
-                  ovEdges={ovEdges}
-                  profileImg={profileImg}
-                  username={username}
-                  thumbnails={thumbnails}
-                  shortcode={shortcode}
-                  tnContents={tnContents}
-                  likeCnt={likeCnt}
-                  commentCnt={commentCnt}
-                />
-              </>
-            );
-          } else if (match.path.substr(1, 10) === "postDetail") {
-            let thisShortcode = match.params.shortcode;
-            return (
-              <PostDetail
-                ovEdges={ovEdges}
-                profileImg={profileImg}
-                username={username}
-                thumbnails={thumbnails}
-                tnContents={tnContents}
-                commentCnt={commentCnt}
-                likeCnt={likeCnt}
-                thisShortcode={thisShortcode}
-              />
-            );
-          } else if (match.path.substr(1, 13) === "profileDetail") {
-            return (
-              <>
-                <ProfileDetail
-                  profileImg={profileImg}
-                  username={username}
-                  imgArr={imgArr}
-                  shortcode={shortcode}
-                  followedCnt={followedCnt}
-                  followingCnt={followingCnt}
-                  totalPostCnt={totalPostCnt}
-                />
-              </>
-            );
-          }
-        })()} */}
+        <p>-- 최근게시물 --</p>
+        <HashtagDetailThumbnails imgArr={thumbnails} shortcode={shortcode} />
       </>
     </div>
   );

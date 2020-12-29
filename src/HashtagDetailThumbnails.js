@@ -5,12 +5,7 @@ const imageSize = {
   height: "293px"
 };
 
-export default function HashtagDetailThumbnails({
-  username,
-  imgArr,
-  shortcode,
-  totalPostCnt
-}) {
+export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
   let thumbnailList = [];
 
   imgArr.map((thumbnailImage, index) => {
