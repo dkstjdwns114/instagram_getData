@@ -8,7 +8,7 @@ const imageSize = {
 export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
   let thumbnailList = [];
 
-  imgArr.map((thumbnailImage, index) => {
+  imgArr.forEach((thumbnailImage, index) => {
     (index + 1) % 3 === 0
       ? thumbnailList.push(
           <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>

@@ -96,7 +96,7 @@ export default function UsernamePost({ match }) {
                 .end_cursor;
             userid = response.data.graphql.user.id;
             nextPageResponse = await axios.get(
-              `https://instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=12&after=${end_cursor}`
+              `https://instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=62&after=${end_cursor}`
             );
             setHasNextPage(has_next_page);
           }
@@ -117,7 +117,7 @@ export default function UsernamePost({ match }) {
   if (error) return <div>Error</div>;
   if (!jsonData) {
     return null;
-  } else if (jsonData && match.params.shortcode === undefined && !loading) {
+  } else if (jsonData && match.params.shortcode === undefined) {
     jsonGraphql = Object.values(jsonData.graphql);
 
     // 프로필 이미지
@@ -147,10 +147,10 @@ export default function UsernamePost({ match }) {
     });
 
     // 게시물 Img/Video url
-    thumbnails.map((test, idx) => {
+    thumbnails.forEach((test, idx) => {
       if (typeof test === "object") {
         thumbnails[idx] = "";
-        test.map((image) => {
+        test.forEach((image) => {
           if (image.node.is_video) {
             thumbnails[idx] += "isVideo" + image.node.video_url + " ";
           } else {
@@ -187,7 +187,7 @@ export default function UsernamePost({ match }) {
       }
     });
 
-    ovEdges.map((edges) => {
+    ovEdges.forEach((edges) => {
       // 게시물 imgArr
       imgArr.push(edges.node.thumbnail_src);
       // 게시물 shortcode
@@ -197,7 +197,7 @@ export default function UsernamePost({ match }) {
     // 다음페이지가 있을 때 데이터 추가
     if (hasNextPage) {
       queryEdges = queryData.data.user.edge_owner_to_timeline_media.edges;
-      queryEdges.map((edges, idx) => {
+      queryEdges.forEach((edges, idx) => {
         imgArr.push(edges.node.thumbnail_src);
         shortcode.push(edges.node.shortcode);
       });
@@ -210,12 +210,8 @@ export default function UsernamePost({ match }) {
     followingCnt = jsonGraphql[0].edge_follow.count;
   } else if (match.params.shortcode !== undefined) {
     jsonGraphql = Object.values(jsonData.graphql);
-
-    // 프로필 이미지
-    profileImg = jsonGraphql.map((graphql, idx) => {
-      username = graphql.owner.username;
-      return graphql.owner.profile_pic_url;
-    });
+    username = jsonGraphql[0].owner.username;
+    profileImg = jsonGraphql[0].owner.profile_pic_url;
 
     jsonEdges = jsonGraphql.map((graphql, idx) => {
       likeCnt = graphql.edge_media_preview_like.count;
@@ -231,20 +227,21 @@ export default function UsernamePost({ match }) {
       }
     });
 
+    commentCnt = jsonGraphql[0].edge_media_to_parent_comment.count;
+
     jsonParentComment = jsonGraphql.map((graphql, idx) => {
-      commentCnt = graphql.edge_media_to_parent_comment.count;
       return graphql.edge_media_to_parent_comment.edges;
     });
     ovJsonParentComment = Object.values(jsonParentComment[0]);
 
     // 댓글
-    ovJsonParentComment.map((edges, idx) => {
+    ovJsonParentComment.forEach((edges, idx) => {
       comments.push({ id: edges.node.owner.username, reply: edges.node.text });
     });
 
     if (!isAlonePost) {
       ovEdges = Object.values(jsonEdges[0]);
-      ovEdges.map((edges, idx) => {
+      ovEdges.forEach((edges, idx) => {
         if (edges.node.is_video) {
           thumbnails += "isVideo" + edges.node.video_url + " ";
         } else {

@@ -16,19 +16,17 @@ export default function HashtagPost({ match }) {
   let hashTagData;
   let totalPostCnt;
   let ovEdges;
-  let thumbnails;
+  let thumbnails = [];
   let shortcode = [];
 
   // pagination
   let nextPageResponse;
-  let has_next_page = false;
-  let end_cursor;
   let queryEdges;
 
   // 인기게시물
   let ovTopEdges;
   let topShortcode = [];
-  let topThumbnails;
+  let topThumbnails = [];
 
   const sendTagname = (e) => {
     setTagname(inputValue);
@@ -57,15 +55,15 @@ export default function HashtagPost({ match }) {
         const response = await axios.get(
           `https://www.instagram.com/explore/tags/${tagname}/?__a=1`
         );
-        has_next_page =
+        let has_next_page =
           response.data.graphql.hashtag.edge_hashtag_to_media.page_info
             .has_next_page;
         if (has_next_page) {
-          end_cursor =
+          let end_cursor =
             response.data.graphql.hashtag.edge_hashtag_to_media.page_info
               .end_cursor;
           nextPageResponse = await axios.get(
-            `https://www.instagram.com/graphql/query/?query_hash=298b92c8d7cad703f7565aa892ede943&variables={"tag_name":"${tagname}","first":50,"after":"${end_cursor}"}
+            `https://www.instagram.com/graphql/query/?query_hash=298b92c8d7cad703f7565aa892ede943&variables={"tag_name":"${tagname}","first":70,"after":"${end_cursor}"}
             `
           );
           setHasNextPage(has_next_page);
@@ -100,15 +98,15 @@ export default function HashtagPost({ match }) {
     ovEdges = hashTagData.edge_hashtag_to_media.edges;
 
     // 게시물 Img, shortcode
-    thumbnails = ovEdges.map((test, index) => {
-      shortcode.push(test.node.shortcode);
-      return test.node.thumbnail_src;
+    ovEdges.forEach((edges) => {
+      shortcode.push(edges.node.shortcode);
+      thumbnails.push(edges.node.thumbnail_src);
     });
 
     // 다음페이지가 있을 때 데이터 추가
     if (hasNextPage) {
       queryEdges = nextData.data.hashtag.edge_hashtag_to_media.edges;
-      queryEdges.map((edges, idx) => {
+      queryEdges.forEach((edges) => {
         shortcode.push(edges.node.shortcode);
         thumbnails.push(edges.node.thumbnail_src);
       });
@@ -118,9 +116,9 @@ export default function HashtagPost({ match }) {
     ovTopEdges = Object.values(hashTagData.edge_hashtag_to_top_posts.edges);
 
     // 인기게시물 Img, shortcode
-    topThumbnails = ovTopEdges.map((test, index) => {
-      topShortcode.push(test.node.shortcode);
-      return test.node.thumbnail_src;
+    ovTopEdges.forEach((edges) => {
+      topShortcode.push(edges.node.shortcode);
+      topThumbnails.push(edges.node.thumbnail_src);
     });
   }
 
