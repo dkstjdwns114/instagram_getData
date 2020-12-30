@@ -6,10 +6,12 @@ import PostDetail from "./PostDetail";
 
 export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
+  const [queryData, setQueryData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchUsername, setSearchUsername] = useState();
   const [inputValue, setInputValue] = useState("");
+  const [hasNextPage, setHasNextPage] = useState(false);
 
   let jsonGraphql;
   let profileImg;
@@ -29,10 +31,15 @@ export default function UsernamePost({ match }) {
   let followedCnt;
   let followingCnt;
   let response;
+  let nextPageResponse;
   let jsonParentComment;
   let ovJsonParentComment;
   let comments = [];
   let isAlonePost = false;
+  let has_next_page = false;
+  let end_cursor;
+  let userid;
+  let queryEdges;
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
@@ -78,9 +85,26 @@ export default function UsernamePost({ match }) {
             `https://www.instagram.com/${match.params.username}/?__a=1`
           );
           setInputValue(match.params.username);
+          has_next_page =
+            response.data.graphql.user.edge_owner_to_timeline_media.page_info
+              .has_next_page;
+          if (has_next_page) {
+            end_cursor =
+              response.data.graphql.user.edge_owner_to_timeline_media.page_info
+                .end_cursor;
+            userid = response.data.graphql.user.id;
+            nextPageResponse = await axios.get(
+              `https://instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=12&after=${end_cursor}`
+            );
+            setHasNextPage(has_next_page);
+          }
         }
         setData(response.data);
+        if (has_next_page) {
+          setQueryData(nextPageResponse.data);
+        }
       } catch (e) {
+        console.log(e);
         setError(e);
       }
       setLoading(false);
@@ -92,7 +116,7 @@ export default function UsernamePost({ match }) {
   if (error) return <div>Error</div>;
   if (!jsonData) {
     return null;
-  } else if (jsonData && match.params.shortcode === undefined) {
+  } else if (jsonData && match.params.shortcode === undefined && !loading) {
     jsonGraphql = Object.values(jsonData.graphql);
 
     // 프로필 이미지
@@ -168,6 +192,14 @@ export default function UsernamePost({ match }) {
       // 게시물 shortcode
       shortcode.push(edges.node.shortcode);
     });
+
+    if (hasNextPage) {
+      queryEdges = queryData.data.user.edge_owner_to_timeline_media.edges;
+      queryEdges.map((edges, idx) => {
+        imgArr.push(edges.node.thumbnail_src);
+        shortcode.push(edges.node.shortcode);
+      });
+    }
 
     // 팔로워 수
     followedCnt = jsonGraphql[0].edge_followed_by.count;
