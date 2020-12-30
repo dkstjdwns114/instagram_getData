@@ -31,11 +31,13 @@ export default function UsernamePost({ match }) {
   let followedCnt;
   let followingCnt;
   let response;
-  let nextPageResponse;
   let jsonParentComment;
   let ovJsonParentComment;
   let comments = [];
   let isAlonePost = false;
+
+  // pagination
+  let nextPageResponse;
   let has_next_page = false;
   let end_cursor;
   let userid;
@@ -104,7 +106,6 @@ export default function UsernamePost({ match }) {
           setQueryData(nextPageResponse.data);
         }
       } catch (e) {
-        console.log(e);
         setError(e);
       }
       setLoading(false);
@@ -193,6 +194,7 @@ export default function UsernamePost({ match }) {
       shortcode.push(edges.node.shortcode);
     });
 
+    // 다음페이지가 있을 때 데이터 추가
     if (hasNextPage) {
       queryEdges = queryData.data.user.edge_owner_to_timeline_media.edges;
       queryEdges.map((edges, idx) => {
