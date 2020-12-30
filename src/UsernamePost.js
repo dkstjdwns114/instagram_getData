@@ -37,7 +37,10 @@ export default function UsernamePost({ match }) {
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
     setInputValue(searchUsername);
-    if (match.path.substr(1, 13) === "profileDetail") {
+    if (
+      match.path.substr(1, 13) === "profileDetail" ||
+      match.path.substr(1, 10) === "postDetail"
+    ) {
       document.location.href = `/profileDetail/${inputValue}`;
     }
   };
@@ -70,7 +73,6 @@ export default function UsernamePost({ match }) {
           response = await axios.get(
             `https://www.instagram.com/p/${match.params.shortcode}/?__a=1`
           );
-          setInputValue(match.params.username);
         } else {
           response = await axios.get(
             `https://www.instagram.com/${match.params.username}/?__a=1`
@@ -82,7 +84,6 @@ export default function UsernamePost({ match }) {
         setError(e);
       }
       setLoading(false);
-      setInputValue(searchUsername);
     };
     fetchUsers();
   }, [searchUsername]);
@@ -247,6 +248,9 @@ export default function UsernamePost({ match }) {
       <br />
       {(function () {
         if (match.path === "/") {
+          if (searchUsername === undefined) {
+            setSearchUsername("undefined");
+          }
           return (
             <>
               <MainFeed
@@ -262,7 +266,9 @@ export default function UsernamePost({ match }) {
             </>
           );
         } else if (match.path.substr(1, 10) === "postDetail") {
-          let thisShortcode = match.params.shortcode;
+          if (searchUsername === undefined) {
+            setSearchUsername(username);
+          }
           return (
             <PostDetail
               profileImg={profileImg}

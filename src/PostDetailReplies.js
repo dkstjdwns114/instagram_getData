@@ -47,7 +47,7 @@ class PostDetailReplies extends Component {
     return (
       <>
         <p>총 댓글 갯수 : {this.state.commentCnt}개</p>
-        <p>받아온 댓글 갯수 : {this.state.items.length}</p>
+        <p>받아온 댓글 갯수 : {this.state.items.length}개</p>
         <input
           value={this.state.item.reply}
           type="text"
