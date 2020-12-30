@@ -6,7 +6,7 @@ export default function HashtagPost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tagname, setTagname] = useState("미스코리아");
+  const [tagname, setTagname] = useState("수영복");
   const [inputValue, setInputValue] = useState("");
 
   let jsonGraphql;
@@ -15,20 +15,12 @@ export default function HashtagPost({ match }) {
   let totalPostCnt;
   let ovEdges;
   let thumbnails;
-  let textEdges;
-  let ovTextEdges;
-  let thumbnailText;
-  let tnContents;
   let shortcode = [];
 
   // 인기게시물
   let ovTopEdges;
   let topShortcode = [];
   let topThumbnails;
-  let topTextEdges;
-  let topOvTextEdges;
-  let topThumbnailText;
-  let topTnContents;
 
   const sendTagname = (e) => {
     setTagname(inputValue);
@@ -89,23 +81,6 @@ export default function HashtagPost({ match }) {
       return test.node.thumbnail_src;
     });
 
-    textEdges = ovEdges.map((edges) => {
-      return edges.node.edge_media_to_caption.edges;
-    });
-    ovTextEdges = Object.values(textEdges);
-    thumbnailText = ovTextEdges.map((text, idx) => {
-      return text[0];
-    });
-
-    // 게시물 Text
-    tnContents = thumbnailText.map((real, idx) => {
-      if (real === undefined) {
-        return "";
-      } else {
-        return real.node.text;
-      }
-    });
-
     // ---- 인기게시물 ----
     ovTopEdges = Object.values(hashTagData.edge_hashtag_to_top_posts.edges);
 
@@ -113,23 +88,6 @@ export default function HashtagPost({ match }) {
     topThumbnails = ovTopEdges.map((test, index) => {
       topShortcode.push(test.node.shortcode);
       return test.node.thumbnail_src;
-    });
-
-    topTextEdges = ovTopEdges.map((edges) => {
-      return edges.node.edge_media_to_caption.edges;
-    });
-    topOvTextEdges = Object.values(topTextEdges);
-    topThumbnailText = topOvTextEdges.map((text, idx) => {
-      return text[0];
-    });
-
-    // 인기게시물 Text
-    topTnContents = topThumbnailText.map((real, idx) => {
-      if (real === undefined) {
-        return "";
-      } else {
-        return real.node.text;
-      }
     });
   }
 
@@ -139,6 +97,7 @@ export default function HashtagPost({ match }) {
         <h1>
           <a href="/">HOME</a>
         </h1>
+        <h4>이미지 클릭시 해당 게시물 상세페이지로 이동합니다.</h4>
         <p>↓검색하고싶은 태그를 입력하세요↓</p>
         <p>
           <input
@@ -151,7 +110,8 @@ export default function HashtagPost({ match }) {
           />
           <input type="button" value="Submit" onClick={sendTagname} />
         </p>
-        <img src={profileImg} alert="태그 프로필" />
+        <img src={profileImg} alert="태그 프로필" /> ←
+        <span> #{tagname} 의 대표 이미지</span>
         <p>총 게시물 수 : {totalPostCnt}개</p>
         <hr />
         <p>-- 인기게시물 --</p>
