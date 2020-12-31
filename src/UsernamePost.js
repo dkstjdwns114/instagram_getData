@@ -75,6 +75,8 @@ export default function UsernamePost({ match }) {
         setLoading(true);
         if (match.path === "/") {
           response = await axios.get(
+            // 타임라인 가져오는 url (인터넷으로 들어가면 들어가지는데 데이터는 null로 나와서 적용 못함)
+            // `https://www.instagram.com/graphql/query/?query_hash=c699b185975935ae2a457f24075de8c7`
             `https://www.instagram.com/${searchUsername}/?__a=1`
           );
           setInputValue(searchUsername);
