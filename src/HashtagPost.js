@@ -45,6 +45,14 @@ export default function HashtagPost({ match }) {
   let avgHours = 0;
   let avgMinutes = 0;
 
+  // 최근게시물 평균
+  let totImgCnt = 0;
+  let totVideoCnt = 0;
+  let totTextLength = 0;
+  let avgImg = 0;
+  let avgVideo = 0;
+  let avgText = 0;
+
   const sendTagname = (e) => {
     if (match.params.hashtag !== inputValue.replace(/\#/g, "")) {
       setTagname(inputValue.replace(/\#/g, ""));
@@ -122,6 +130,11 @@ export default function HashtagPost({ match }) {
     ovEdges.forEach((edges) => {
       shortcode.push(edges.node.shortcode);
       thumbnails.push(edges.node.thumbnail_src);
+
+      if (edges.node.edge_media_to_caption.edges.length) {
+        totTextLength +=
+          edges.node.edge_media_to_caption.edges[0].node.text.length;
+      }
     });
 
     // 다음페이지가 있을 때 데이터 추가
@@ -130,8 +143,15 @@ export default function HashtagPost({ match }) {
       queryEdges.forEach((edges) => {
         shortcode.push(edges.node.shortcode);
         thumbnails.push(edges.node.thumbnail_src);
+
+        if (edges.node.edge_media_to_caption.edges.length) {
+          totTextLength +=
+            edges.node.edge_media_to_caption.edges[0].node.text.length;
+        }
       });
     }
+    let getDataCnt = shortcode.length;
+    avgText = totTextLength / getDataCnt;
 
     // ---- 인기게시물 ----
     ovTopEdges = Object.values(hashTagData.edge_hashtag_to_top_posts.edges);
@@ -150,10 +170,12 @@ export default function HashtagPost({ match }) {
       topTotHoursCnt += topTimestamp.getHours();
       topTotMinutesCnt += topTimestamp.getMinutes();
 
-      let topText = edges.node.edge_media_to_caption.edges[0].node.text;
-      let tagslistarr = topText.match(/(^|\s)#([^ ]*)/g);
-      if (tagslistarr !== null) {
-        topTotHashtagCnt += tagslistarr.length;
+      if (edges.node.edge_media_to_caption.edges.length) {
+        let topText = edges.node.edge_media_to_caption.edges[0].node.text;
+        let tagslistarr = topText.match(/(^|\s)#([^ ]*)/g);
+        if (tagslistarr !== null) {
+          topTotHashtagCnt += tagslistarr.length;
+        }
       }
     });
 
@@ -213,6 +235,8 @@ export default function HashtagPost({ match }) {
         <hr />
         <p>-- 최근게시물 --</p>
         <p>받아온 게시물 : {shortcode.length}개</p>
+        <p>* 받아온 게시물 기준 *</p>
+        <p>평균 본문 글자 수 : {avgText.toFixed(0)}자</p>
         <HashtagDetailThumbnails imgArr={thumbnails} shortcode={shortcode} />
       </>
     </div>
