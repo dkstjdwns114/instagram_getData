@@ -19,7 +19,7 @@ export default function PostDetail({
   return (
     <div>
       <h1>
-        <a href="/">HOME</a> <a href="/HashTag">HashTag</a>
+        <a href="/">HOME</a> <a href="/HashTag/수영복">HashTag</a>
       </h1>
       <Profile profile_image={profileImg} username={username} />
       <ThumbnailContents thumbnails={thumbnails} />

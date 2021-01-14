@@ -13,8 +13,6 @@ export default function ThumbnailText({ content, match }) {
       words = content[0];
     }
     tagslistarr = words.match(/(^|\s)#([^ ]*)/g);
-    console.log(content[0]);
-    console.log(tagslistarr);
     if (tagslistarr === null) {
       setText(content);
     } else {
