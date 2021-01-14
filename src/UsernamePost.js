@@ -49,9 +49,15 @@ export default function UsernamePost({ match }) {
   let totLikeCnt = 0;
   let avgLikeCnt = 0;
   let avgCommentCnt = 0;
-  let avgTimestamp = 0;
   let greatestLikeCntPost = 0;
   let greatestLikePostShortcode;
+  let timestamp = 0;
+  let totDateCnt = 0;
+  let totHoursCnt = 0;
+  let totMinutesCnt = 0;
+  let avgDateCnt = 0;
+  let avgHoursCnt = 0;
+  let avgMinutesCnt = 0;
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
@@ -221,6 +227,15 @@ export default function UsernamePost({ match }) {
     });
 
     ovEdges.forEach((edges) => {
+      timestamp = new Date(edges.node.taken_at_timestamp * 1000);
+
+      // total 일
+      totDateCnt += timestamp.getDate();
+      // total 시
+      totHoursCnt += timestamp.getHours();
+      // total 분
+      totMinutesCnt += timestamp.getMinutes();
+
       // 총 댓글 수
       totCommentCnt += edges.node.edge_media_to_comment.count;
       // 총 좋아요 수
@@ -230,6 +245,7 @@ export default function UsernamePost({ match }) {
         greatestLikeCntPost = edges.node.edge_media_preview_like.count;
         greatestLikePostShortcode = edges.node.shortcode;
       }
+
       // 게시물 imgArr
       imgArr.push(edges.node.thumbnail_src);
       // 게시물 shortcode
@@ -240,8 +256,15 @@ export default function UsernamePost({ match }) {
     if (hasNextPage) {
       queryData.forEach((arr, i) => {
         arr.forEach((edges, j) => {
-          imgArr.push(edges.node.thumbnail_src);
-          shortcode.push(edges.node.shortcode);
+          timestamp = new Date(edges.node.taken_at_timestamp * 1000);
+
+          // total 일
+          totDateCnt += timestamp.getDate();
+          // total 시
+          totHoursCnt += timestamp.getHours();
+          // total 분
+          totMinutesCnt += timestamp.getMinutes();
+
           // 총 댓글 수
           totCommentCnt += edges.node.edge_media_to_comment.count;
           // 총 좋아요 수
@@ -251,25 +274,19 @@ export default function UsernamePost({ match }) {
             greatestLikeCntPost = edges.node.edge_media_preview_like.count;
             greatestLikePostShortcode = edges.node.shortcode;
           }
-          // let timestamp = new Date(edges.node.taken_at_timestamp * 1000);
-          // let date =
-          //   timestamp.getFullYear() +
-          //   "-" +
-          //   (timestamp.getMonth() + 1) +
-          //   "-" +
-          //   timestamp.getDate() +
-          //   " " +
-          //   timestamp.getHours() +
-          //   ":" +
-          //   timestamp.getMinutes() +
-          //   "";
-          // console.log(date);
+
+          imgArr.push(edges.node.thumbnail_src);
+          shortcode.push(edges.node.shortcode);
         });
       });
     }
-    avgCommentCnt = totCommentCnt / shortcode.length;
-    avgLikeCnt = totLikeCnt / shortcode.length;
-    console.log(avgLikeCnt);
+    let getPostCnt = shortcode.length;
+    avgCommentCnt = totCommentCnt / getPostCnt;
+    avgLikeCnt = totLikeCnt / getPostCnt;
+
+    avgDateCnt = totDateCnt / getPostCnt;
+    avgHoursCnt = totHoursCnt / getPostCnt;
+    avgMinutesCnt = totMinutesCnt / getPostCnt;
 
     // 팔로워 수
     followedCnt = jsonGraphql[0].edge_followed_by.count;
@@ -395,6 +412,9 @@ export default function UsernamePost({ match }) {
                 avgLikeCnt={avgLikeCnt}
                 greatestLikeCntPost={greatestLikeCntPost}
                 greatestLikePostShortcode={greatestLikePostShortcode}
+                avgDateCnt={avgDateCnt}
+                avgHoursCnt={avgHoursCnt}
+                avgMinutesCnt={avgMinutesCnt}
               />
             </>
           );

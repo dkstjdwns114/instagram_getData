@@ -14,7 +14,9 @@ export default function ProfileDetail({
   avgLikeCnt,
   greatestLikeCntPost,
   greatestLikePostShortcode,
-  match
+  avgDateCnt,
+  avgHoursCnt,
+  avgMinutesCnt
 }) {
   return (
     <div>
@@ -35,6 +37,9 @@ export default function ProfileDetail({
         avgLikeCnt={avgLikeCnt}
         greatestLikeCntPost={greatestLikeCntPost}
         greatestLikePostShortcode={greatestLikePostShortcode}
+        avgDateCnt={avgDateCnt}
+        avgHoursCnt={avgHoursCnt}
+        avgMinutesCnt={avgMinutesCnt}
       />
     </div>
   );

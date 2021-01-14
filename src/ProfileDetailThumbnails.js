@@ -14,7 +14,10 @@ export default function ProfileDetailThumbnails({
   avgCommentCnt,
   avgLikeCnt,
   greatestLikeCntPost,
-  greatestLikePostShortcode
+  greatestLikePostShortcode,
+  avgDateCnt,
+  avgHoursCnt,
+  avgMinutesCnt
 }) {
   let thumbnailList = [];
 
@@ -49,13 +52,16 @@ export default function ProfileDetailThumbnails({
       <p>팔로잉 수 : {followingCnt}명</p>
       <p>총 게시물 : {totalPostCnt}개</p>
       <p>받아온 게시물 : {shortcode.length}개</p>
-      <p>받아온 게시물의 평균 좋아요 : {avgLikeCnt.toFixed(1)}개</p>
-
+      <p>-- 받아온 게시물 기준 --</p>
+      <p>평균 좋아요 : {avgLikeCnt.toFixed(1)}개</p>
       <p>
-        받아온 게시물 중 최고 좋아요 : {greatestLikeCntPost}개{" -> "}
+        최고 좋아요 : {greatestLikeCntPost}개{" -> "}
         <a href={"/postDetail/" + greatestLikePostShortcode}>[게시물 링크]</a>
       </p>
-      <p>받아온 게시물의 평균 댓글 : {avgCommentCnt.toFixed(1)}개</p>
+      <p>평균 댓글 : {avgCommentCnt.toFixed(1)}개</p>
+      <p>평균 작성 시각(일) : {avgDateCnt.toFixed(0)}일</p>
+      <p>평균 작성 시각(시) : {avgHoursCnt.toFixed(0)}시</p>
+      <p>평균 작성 시각(분) : {avgMinutesCnt.toFixed(0)}분</p>
       {thumbnailList}
     </div>
   );
