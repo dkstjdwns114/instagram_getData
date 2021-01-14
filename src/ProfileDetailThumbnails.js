@@ -10,7 +10,8 @@ export default function ProfileDetailThumbnails({
   shortcode,
   followedCnt,
   followingCnt,
-  totalPostCnt
+  totalPostCnt,
+  avgCommentCnt
 }) {
   let thumbnailList = [];
 
@@ -45,6 +46,7 @@ export default function ProfileDetailThumbnails({
       <p>팔로잉 수 : {followingCnt}명</p>
       <p>총 게시물 : {totalPostCnt}개</p>
       <p>받아온 게시물 : {shortcode.length}개</p>
+      <p>평균 댓글 갯수 : {avgCommentCnt.toFixed(1)}개</p>
       {thumbnailList}
     </div>
   );

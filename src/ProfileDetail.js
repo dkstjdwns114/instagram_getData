@@ -9,7 +9,8 @@ export default function ProfileDetail({
   shortcode,
   followedCnt,
   followingCnt,
-  totalPostCnt
+  totalPostCnt,
+  avgCommentCnt
 }) {
   return (
     <div>
@@ -26,6 +27,7 @@ export default function ProfileDetail({
         followedCnt={followedCnt}
         followingCnt={followingCnt}
         totalPostCnt={totalPostCnt}
+        avgCommentCnt={avgCommentCnt}
       />
     </div>
   );

@@ -12,6 +12,7 @@ export default function UsernamePost({ match }) {
   const [searchUsername, setSearchUsername] = useState();
   const [inputValue, setInputValue] = useState("");
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [pageCnt, setPagecnt] = useState(null);
 
   let jsonGraphql;
   let profileImg;
@@ -41,7 +42,14 @@ export default function UsernamePost({ match }) {
   let has_next_page = false;
   let end_cursor;
   let userid;
-  let queryEdges;
+  let edges = [];
+
+  // avg likeCnt, commentCnt, timestamp, greatest likeCntPost
+  let totCommentCnt = 0;
+  let avgLikeCnt = 0;
+  let avgCommentCnt = 0;
+  let avgTimestamp = 0;
+  let greatestLikeCntPost = 0;
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
@@ -92,20 +100,39 @@ export default function UsernamePost({ match }) {
           has_next_page =
             response.data.graphql.user.edge_owner_to_timeline_media.page_info
               .has_next_page;
+          setHasNextPage(has_next_page);
           if (has_next_page) {
+            setPagecnt(1);
             end_cursor =
               response.data.graphql.user.edge_owner_to_timeline_media.page_info
                 .end_cursor;
             userid = response.data.graphql.user.id;
-            nextPageResponse = await axios.get(
-              `https://instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=62&after=${end_cursor}`
-            );
-            setHasNextPage(has_next_page);
+            let i = 1;
+
+            while (has_next_page) {
+              nextPageResponse = await axios.get(
+                `https://instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=62&after=${end_cursor}`
+              );
+              end_cursor =
+                nextPageResponse.data.data.user.edge_owner_to_timeline_media
+                  .page_info.end_cursor;
+
+              has_next_page =
+                nextPageResponse.data.data.user.edge_owner_to_timeline_media
+                  .page_info.has_next_page;
+
+              edges.push(
+                nextPageResponse.data.data.user.edge_owner_to_timeline_media
+                  .edges
+              );
+              setPagecnt(i);
+              i++;
+            }
           }
         }
         setData(response.data);
-        if (has_next_page) {
-          setQueryData(nextPageResponse.data);
+        if (hasNextPage) {
+          setQueryData(edges);
         }
       } catch (e) {
         setError(e);
@@ -115,7 +142,11 @@ export default function UsernamePost({ match }) {
     fetchUsers();
   }, [searchUsername]);
 
-  if (loading) return <div>로딩중..</div>;
+  if (loading && pageCnt == null) {
+    return <div>로딩중..</div>;
+  } else if (loading && pageCnt !== null) {
+    return <div>{pageCnt} 페이지 로딩중...</div>;
+  }
   if (error) return <div>Error</div>;
   if (!jsonData) {
     return null;
@@ -190,6 +221,8 @@ export default function UsernamePost({ match }) {
     });
 
     ovEdges.forEach((edges) => {
+      // 댓글 수
+      totCommentCnt += edges.node.edge_media_to_comment.count;
       // 게시물 imgArr
       imgArr.push(edges.node.thumbnail_src);
       // 게시물 shortcode
@@ -198,12 +231,31 @@ export default function UsernamePost({ match }) {
 
     // 다음페이지가 있을 때 데이터 추가
     if (hasNextPage) {
-      queryEdges = queryData.data.user.edge_owner_to_timeline_media.edges;
-      queryEdges.forEach((edges, idx) => {
-        imgArr.push(edges.node.thumbnail_src);
-        shortcode.push(edges.node.shortcode);
+      queryData.forEach((arr, i) => {
+        arr.forEach((edges, j) => {
+          imgArr.push(edges.node.thumbnail_src);
+          shortcode.push(edges.node.shortcode);
+          totCommentCnt += edges.node.edge_media_to_comment.count;
+          // console.log(edges.node.edge_media_preview_like.count);
+          // let timestamp = new Date(edges.node.taken_at_timestamp * 1000);
+          // let date =
+          //   timestamp.getFullYear() +
+          //   "-" +
+          //   (timestamp.getMonth() + 1) +
+          //   "-" +
+          //   timestamp.getDate() +
+          //   " " +
+          //   timestamp.getHours() +
+          //   ":" +
+          //   timestamp.getMinutes() +
+          //   "";
+          // console.log(date);
+        });
       });
     }
+    console.log("totCommentCnt : ", totCommentCnt);
+    avgCommentCnt = totCommentCnt / shortcode.length;
+    console.log("avgCommentCnt : ", avgCommentCnt);
 
     // 팔로워 수
     followedCnt = jsonGraphql[0].edge_followed_by.count;
@@ -324,6 +376,7 @@ export default function UsernamePost({ match }) {
                 followedCnt={followedCnt}
                 followingCnt={followingCnt}
                 totalPostCnt={totalPostCnt}
+                avgCommentCnt={avgCommentCnt}
               />
             </>
           );
