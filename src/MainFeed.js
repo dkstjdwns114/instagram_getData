@@ -32,7 +32,7 @@ export default function MainFeed({
         않습니다.
       </h5>
       <h1>
-        <a href="/HashTag">해시태그 검색하기</a>
+        <a href="/HashTag/블랙핑크">해시태그 검색하기</a>
       </h1>
       <h2>Instagram Feed</h2>
       {ovEdges.map((node, index) => {

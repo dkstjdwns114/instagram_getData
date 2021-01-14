@@ -6,7 +6,7 @@ export default function HashtagPost({ match }) {
   const [jsonData, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tagname, setTagname] = useState("수영복");
+  const [tagname, setTagname] = useState(match.params.hashtag);
   const [inputValue, setInputValue] = useState("");
   const [hasNextPage, setHasNextPage] = useState(false);
   const [nextData, setNextData] = useState(null);
@@ -29,8 +29,13 @@ export default function HashtagPost({ match }) {
   let topThumbnails = [];
 
   const sendTagname = (e) => {
-    setTagname(inputValue);
-    setInputValue(tagname);
+    if (match.params.hashtag !== inputValue.replace(/\#/g, "")) {
+      setTagname(inputValue.replace(/\#/g, ""));
+      setInputValue(tagname);
+      document.location.href = `/Hashtag/${inputValue.replace(/\#/g, "")}`;
+    } else if (match.params.hashtag === inputValue.replace(/\#/g, "")) {
+      setInputValue(tagname);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -41,12 +46,12 @@ export default function HashtagPost({ match }) {
   const onEnterPress = (e) => {
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
-
       sendTagname();
     }
   };
 
   useEffect(() => {
+    console.log(match.params.hashtag);
     const fetchUsers = async () => {
       try {
         setError(null);
@@ -142,7 +147,10 @@ export default function HashtagPost({ match }) {
           <input type="button" value="Submit" onClick={sendTagname} />
         </p>
         <img src={profileImg} alert="태그 프로필" /> ←
-        <span> #{tagname} 의 대표 이미지</span>
+        <span>
+          {" "}
+          <a href="#">#{tagname}</a> 의 대표 이미지
+        </span>
         <p>총 게시물 수 : {totalPostCnt}개</p>
         <hr />
         <p>-- 인기게시물 --</p>

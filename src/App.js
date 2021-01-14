@@ -20,7 +20,7 @@ class App extends Component {
               path="/postDetail/:shortcode"
               component={UsernamePost}
             />
-            <Route exact path="/HashTag" component={HashtagPost} />
+            <Route exact path="/HashTag/:hashtag" component={HashtagPost} />
           </Switch>
         </div>
       </Router>
