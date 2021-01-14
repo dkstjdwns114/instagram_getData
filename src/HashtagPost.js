@@ -28,6 +28,23 @@ export default function HashtagPost({ match }) {
   let topShortcode = [];
   let topThumbnails = [];
 
+  // 인기게시물 평균
+  let topTotLikeCnt = 0;
+  let topTotCommentCnt = 0;
+  let topTotHashtagCnt = 0;
+  let topAvgLike = 0;
+  let topAvgComment = 0;
+  let topAvgHashtag = 0;
+  let topTimestamp = 0;
+  let topTotMonthCnt = 0;
+  let topTotDateCnt = 0;
+  let topTotHoursCnt = 0;
+  let topTotMinutesCnt = 0;
+  let avgMonth = 0;
+  let avgDate = 0;
+  let avgHours = 0;
+  let avgMinutes = 0;
+
   const sendTagname = (e) => {
     if (match.params.hashtag !== inputValue.replace(/\#/g, "")) {
       setTagname(inputValue.replace(/\#/g, ""));
@@ -51,7 +68,6 @@ export default function HashtagPost({ match }) {
   };
 
   useEffect(() => {
-    console.log(match.params.hashtag);
     const fetchUsers = async () => {
       try {
         setError(null);
@@ -122,9 +138,36 @@ export default function HashtagPost({ match }) {
 
     // 인기게시물 Img, shortcode
     ovTopEdges.forEach((edges) => {
+      topTotLikeCnt += edges.node.edge_media_preview_like.count;
+      topTotCommentCnt += edges.node.edge_media_to_comment.count;
       topShortcode.push(edges.node.shortcode);
       topThumbnails.push(edges.node.thumbnail_src);
+
+      topTimestamp = new Date(edges.node.taken_at_timestamp * 1000);
+
+      topTotMonthCnt += topTimestamp.getMonth();
+      topTotDateCnt += topTimestamp.getDate();
+      topTotHoursCnt += topTimestamp.getHours();
+      topTotMinutesCnt += topTimestamp.getMinutes();
+
+      let topText = edges.node.edge_media_to_caption.edges[0].node.text;
+      let tagslistarr = topText.match(/(^|\s)#([^ ]*)/g);
+      if (tagslistarr !== null) {
+        topTotHashtagCnt += tagslistarr.length;
+      }
     });
+
+    let getTopCnt = topShortcode.length;
+
+    topAvgLike = topTotLikeCnt / getTopCnt;
+    topAvgComment = topTotCommentCnt / getTopCnt;
+
+    avgMonth = topTotMonthCnt / getTopCnt;
+    avgDate = topTotDateCnt / getTopCnt;
+    avgHours = topTotHoursCnt / getTopCnt;
+    avgMinutes = topTotMinutesCnt / getTopCnt;
+
+    topAvgHashtag = topTotHashtagCnt / getTopCnt;
   }
 
   return (
@@ -154,12 +197,22 @@ export default function HashtagPost({ match }) {
         <p>총 게시물 수 : {totalPostCnt}개</p>
         <hr />
         <p>-- 인기게시물 --</p>
+        <p>받아온 게시물 : {topShortcode.length}개</p>
+        <p>* 받아온 게시물 기준 *</p>
+        <p>평균 좋아요 : {topAvgLike.toFixed(1)}개</p>
+        <p>평균 댓글 : {topAvgComment.toFixed(1)}개</p>
+        <p>평균 작성 시각(월) : {avgMonth.toFixed(0)}월</p>
+        <p>평균 작성 시각(일) : {avgDate.toFixed(0)}일</p>
+        <p>평균 작성 시각(시) : {avgHours.toFixed(0)}시</p>
+        <p>평균 작성 시각(분) : {avgMinutes.toFixed(0)}분</p>
+        <p>평균 해시태그 갯수 : {topAvgHashtag.toFixed(0)}개</p>
         <HashtagDetailThumbnails
           imgArr={topThumbnails}
           shortcode={topShortcode}
         />
         <hr />
         <p>-- 최근게시물 --</p>
+        <p>받아온 게시물 : {shortcode.length}개</p>
         <HashtagDetailThumbnails imgArr={thumbnails} shortcode={shortcode} />
       </>
     </div>

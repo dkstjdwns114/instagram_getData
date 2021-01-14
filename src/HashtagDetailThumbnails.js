@@ -33,10 +33,5 @@ export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
           </>
         );
   });
-  return (
-    <div>
-      <p>받아온 게시물 : {shortcode.length}개</p>
-      {thumbnailList}
-    </div>
-  );
+  return <div>{thumbnailList}</div>;
 }
