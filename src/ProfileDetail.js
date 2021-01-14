@@ -10,7 +10,11 @@ export default function ProfileDetail({
   followedCnt,
   followingCnt,
   totalPostCnt,
-  avgCommentCnt
+  avgCommentCnt,
+  avgLikeCnt,
+  greatestLikeCntPost,
+  greatestLikePostShortcode,
+  match
 }) {
   return (
     <div>
@@ -28,6 +32,9 @@ export default function ProfileDetail({
         followingCnt={followingCnt}
         totalPostCnt={totalPostCnt}
         avgCommentCnt={avgCommentCnt}
+        avgLikeCnt={avgLikeCnt}
+        greatestLikeCntPost={greatestLikeCntPost}
+        greatestLikePostShortcode={greatestLikePostShortcode}
       />
     </div>
   );

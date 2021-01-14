@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-export default function ThumbnailText({ content }) {
+export default function ThumbnailText({ content, match }) {
   const [text, setText] = useState(null);
   const [tagCnt, setTagcnt] = useState(0);
   let words;
 
   useEffect(() => {
     let tagslistarr;
-    words = content;
+    if (match === undefined) {
+      words = content;
+    } else {
+      words = content[0];
+    }
     tagslistarr = words.match(/(^|\s)#([^ ]*)/g);
+    console.log(content[0]);
+    console.log(tagslistarr);
     if (tagslistarr === null) {
       setText(content);
     } else {

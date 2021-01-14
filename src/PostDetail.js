@@ -13,7 +13,8 @@ export default function PostDetail({
   tnContents,
   comments,
   commentCnt,
-  likeCnt
+  likeCnt,
+  match
 }) {
   return (
     <div>
@@ -22,7 +23,7 @@ export default function PostDetail({
       </h1>
       <Profile profile_image={profileImg} username={username} />
       <ThumbnailContents thumbnails={thumbnails} />
-      <ThumbnailText content={tnContents} />
+      <ThumbnailText content={tnContents} match={match} />
       <br />
       <Like like={likeCnt} />
       <Save />

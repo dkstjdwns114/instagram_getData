@@ -46,10 +46,12 @@ export default function UsernamePost({ match }) {
 
   // avg likeCnt, commentCnt, timestamp, greatest likeCntPost
   let totCommentCnt = 0;
+  let totLikeCnt = 0;
   let avgLikeCnt = 0;
   let avgCommentCnt = 0;
   let avgTimestamp = 0;
   let greatestLikeCntPost = 0;
+  let greatestLikePostShortcode;
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
@@ -125,15 +127,13 @@ export default function UsernamePost({ match }) {
                 nextPageResponse.data.data.user.edge_owner_to_timeline_media
                   .edges
               );
+              setQueryData(edges);
               setPagecnt(i);
               i++;
             }
           }
         }
         setData(response.data);
-        if (hasNextPage) {
-          setQueryData(edges);
-        }
       } catch (e) {
         setError(e);
       }
@@ -221,8 +221,15 @@ export default function UsernamePost({ match }) {
     });
 
     ovEdges.forEach((edges) => {
-      // 댓글 수
+      // 총 댓글 수
       totCommentCnt += edges.node.edge_media_to_comment.count;
+      // 총 좋아요 수
+      totLikeCnt += edges.node.edge_media_preview_like.count;
+      // 최고 좋아요 수
+      if (greatestLikeCntPost < edges.node.edge_media_preview_like.count) {
+        greatestLikeCntPost = edges.node.edge_media_preview_like.count;
+        greatestLikePostShortcode = edges.node.shortcode;
+      }
       // 게시물 imgArr
       imgArr.push(edges.node.thumbnail_src);
       // 게시물 shortcode
@@ -235,8 +242,15 @@ export default function UsernamePost({ match }) {
         arr.forEach((edges, j) => {
           imgArr.push(edges.node.thumbnail_src);
           shortcode.push(edges.node.shortcode);
+          // 총 댓글 수
           totCommentCnt += edges.node.edge_media_to_comment.count;
-          // console.log(edges.node.edge_media_preview_like.count);
+          // 총 좋아요 수
+          totLikeCnt += edges.node.edge_media_preview_like.count;
+          // 최고 좋아요 수
+          if (greatestLikeCntPost < edges.node.edge_media_preview_like.count) {
+            greatestLikeCntPost = edges.node.edge_media_preview_like.count;
+            greatestLikePostShortcode = edges.node.shortcode;
+          }
           // let timestamp = new Date(edges.node.taken_at_timestamp * 1000);
           // let date =
           //   timestamp.getFullYear() +
@@ -253,9 +267,9 @@ export default function UsernamePost({ match }) {
         });
       });
     }
-    console.log("totCommentCnt : ", totCommentCnt);
     avgCommentCnt = totCommentCnt / shortcode.length;
-    console.log("avgCommentCnt : ", avgCommentCnt);
+    avgLikeCnt = totLikeCnt / shortcode.length;
+    console.log(avgLikeCnt);
 
     // 팔로워 수
     followedCnt = jsonGraphql[0].edge_followed_by.count;
@@ -363,6 +377,7 @@ export default function UsernamePost({ match }) {
               comments={comments}
               commentCnt={commentCnt}
               likeCnt={likeCnt}
+              match={match}
             />
           );
         } else if (match.path.substr(1, 13) === "profileDetail") {
@@ -377,6 +392,9 @@ export default function UsernamePost({ match }) {
                 followingCnt={followingCnt}
                 totalPostCnt={totalPostCnt}
                 avgCommentCnt={avgCommentCnt}
+                avgLikeCnt={avgLikeCnt}
+                greatestLikeCntPost={greatestLikeCntPost}
+                greatestLikePostShortcode={greatestLikePostShortcode}
               />
             </>
           );
