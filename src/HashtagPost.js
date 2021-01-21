@@ -111,7 +111,7 @@ export default function HashtagPost({ match }) {
   }, [tagname]);
 
   if (loading) return <div>로딩중..</div>;
-  if (error) return <div>Error</div>;
+  if (error) return <div>Error.. (IP 차단됨)</div>;
   if (!jsonData) {
     return null;
   } else {
@@ -214,7 +214,7 @@ export default function HashtagPost({ match }) {
         <img src={profileImg} alert="태그 프로필" /> ←
         <span>
           {" "}
-          <a href="#">#{tagname}</a> 의 대표 이미지
+          HASHTAG #<a href="#">{tagname}</a> 의 대표 이미지
         </span>
         <p>총 게시물 수 : {totalPostCnt}개</p>
         <hr />

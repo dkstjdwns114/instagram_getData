@@ -153,10 +153,27 @@ export default function UsernamePost({ match }) {
   } else if (loading && pageCnt !== null) {
     return <div>{pageCnt} 페이지 로딩중...</div>;
   }
-  if (error) return <div>Error</div>;
-  if (!jsonData) {
-    return null;
-  } else if (jsonData && match.params.shortcode === undefined) {
+  if (error) {
+    return (
+      <>
+        <h1>
+          <a href="/">HOME</a> <a href="/HashTag/블랙핑크">해시태그 검색하기</a>
+        </h1>
+        <h2>존재하지 않는 아이디 입니다.</h2>
+      </>
+    );
+  }
+  if (typeof jsonData === "string" || jsonData === null) {
+    return (
+      <>
+        <h2>Error.. (IP 차단됨)</h2>
+        <a href="/HashTag/미스코리아">해시태그 검색하기</a>
+      </>
+    );
+  } else if (
+    typeof jsonData !== "string" &&
+    match.params.shortcode === undefined
+  ) {
     jsonGraphql = Object.values(jsonData.graphql);
 
     // 프로필 이미지
@@ -293,7 +310,10 @@ export default function UsernamePost({ match }) {
 
     // 팔로잉 수
     followingCnt = jsonGraphql[0].edge_follow.count;
-  } else if (match.params.shortcode !== undefined) {
+  } else if (
+    typeof jsonData !== "string" &&
+    match.params.shortcode !== undefined
+  ) {
     jsonGraphql = Object.values(jsonData.graphql);
     username = jsonGraphql[0].owner.username;
     profileImg = jsonGraphql[0].owner.profile_pic_url;
@@ -363,61 +383,65 @@ export default function UsernamePost({ match }) {
       </p>
       <br />
       {(function () {
-        if (match.path === "/") {
-          if (searchUsername === undefined) {
-            setSearchUsername("undefined");
-          }
-          return (
-            <>
-              <MainFeed
-                ovEdges={ovEdges}
+        if (typeof jsonData !== "string" && jsonData !== null) {
+          if (match.path === "/") {
+            if (searchUsername === undefined) {
+              setSearchUsername("undefined");
+            }
+            return (
+              <>
+                <MainFeed
+                  ovEdges={ovEdges}
+                  profileImg={profileImg}
+                  username={searchUsername}
+                  thumbnails={thumbnails}
+                  shortcode={shortcode}
+                  tnContents={tnContents}
+                  likeCnt={likeCnt}
+                  commentCnt={commentCnt}
+                />
+              </>
+            );
+          } else if (match.path.substr(1, 10) === "postDetail") {
+            if (searchUsername === undefined) {
+              setSearchUsername(username);
+            }
+            return (
+              <PostDetail
                 profileImg={profileImg}
-                username={searchUsername}
+                username={username}
                 thumbnails={thumbnails}
-                shortcode={shortcode}
                 tnContents={tnContents}
-                likeCnt={likeCnt}
+                comments={comments}
                 commentCnt={commentCnt}
+                likeCnt={likeCnt}
+                match={match}
               />
-            </>
-          );
-        } else if (match.path.substr(1, 10) === "postDetail") {
-          if (searchUsername === undefined) {
-            setSearchUsername(username);
+            );
+          } else if (match.path.substr(1, 13) === "profileDetail") {
+            return (
+              <>
+                <ProfileDetail
+                  profileImg={profileImg}
+                  username={match.params.username}
+                  imgArr={imgArr}
+                  shortcode={shortcode}
+                  followedCnt={followedCnt}
+                  followingCnt={followingCnt}
+                  totalPostCnt={totalPostCnt}
+                  avgCommentCnt={avgCommentCnt}
+                  avgLikeCnt={avgLikeCnt}
+                  greatestLikeCntPost={greatestLikeCntPost}
+                  greatestLikePostShortcode={greatestLikePostShortcode}
+                  avgDateCnt={avgDateCnt}
+                  avgHoursCnt={avgHoursCnt}
+                  avgMinutesCnt={avgMinutesCnt}
+                />
+              </>
+            );
           }
-          return (
-            <PostDetail
-              profileImg={profileImg}
-              username={username}
-              thumbnails={thumbnails}
-              tnContents={tnContents}
-              comments={comments}
-              commentCnt={commentCnt}
-              likeCnt={likeCnt}
-              match={match}
-            />
-          );
-        } else if (match.path.substr(1, 13) === "profileDetail") {
-          return (
-            <>
-              <ProfileDetail
-                profileImg={profileImg}
-                username={match.params.username}
-                imgArr={imgArr}
-                shortcode={shortcode}
-                followedCnt={followedCnt}
-                followingCnt={followingCnt}
-                totalPostCnt={totalPostCnt}
-                avgCommentCnt={avgCommentCnt}
-                avgLikeCnt={avgLikeCnt}
-                greatestLikeCntPost={greatestLikeCntPost}
-                greatestLikePostShortcode={greatestLikePostShortcode}
-                avgDateCnt={avgDateCnt}
-                avgHoursCnt={avgHoursCnt}
-                avgMinutesCnt={avgMinutesCnt}
-              />
-            </>
-          );
+        } else {
+          return <h2>IP 차단됨</h2>;
         }
       })()}
     </>
