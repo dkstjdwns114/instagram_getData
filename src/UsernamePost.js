@@ -13,6 +13,7 @@ export default function UsernamePost({ match }) {
   const [inputValue, setInputValue] = useState("");
   const [hasNextPage, setHasNextPage] = useState(false);
   const [pageCnt, setPagecnt] = useState(null);
+  const [isPrivate, setIsprivate] = useState(null);
 
   let jsonGraphql;
   let profileImg;
@@ -140,6 +141,7 @@ export default function UsernamePost({ match }) {
           }
         }
         setData(response.data);
+        setIsprivate(response.data.graphql.user.is_private);
       } catch (e) {
         setError(e);
       }
@@ -163,11 +165,24 @@ export default function UsernamePost({ match }) {
       </>
     );
   }
+  if (isPrivate) {
+    return (
+      <>
+        <h1>
+          <a href="/">HOME</a>{" "}
+          <a href="/HashTag/미스코리아">해시태그 검색하기</a>
+        </h1>
+        <h2>비공개 아이디는 조회가 불가능합니다.</h2>
+      </>
+    );
+  }
   if (typeof jsonData === "string" || jsonData === null) {
     return (
       <>
+        <p>
+          <a href="/">HOME</a>
+        </p>
         <h2>Error.. (IP 차단됨)</h2>
-        <a href="/HashTag/미스코리아">해시태그 검색하기</a>
       </>
     );
   } else if (

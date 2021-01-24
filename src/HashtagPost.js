@@ -46,19 +46,15 @@ export default function HashtagPost({ match }) {
   let avgMinutes = 0;
 
   // 최근게시물 평균
-  let totImgCnt = 0;
-  let totVideoCnt = 0;
   let totTextLength = 0;
-  let avgImg = 0;
-  let avgVideo = 0;
   let avgText = 0;
 
   const sendTagname = (e) => {
-    if (match.params.hashtag !== inputValue.replace(/\#/g, "")) {
-      setTagname(inputValue.replace(/\#/g, ""));
+    if (match.params.hashtag !== inputValue.replace(/#/g, "")) {
+      setTagname(inputValue.replace(/#/g, ""));
       setInputValue(tagname);
-      document.location.href = `/Hashtag/${inputValue.replace(/\#/g, "")}`;
-    } else if (match.params.hashtag === inputValue.replace(/\#/g, "")) {
+      document.location.href = `/Hashtag/${inputValue.replace(/#/g, "")}`;
+    } else if (match.params.hashtag === inputValue.replace(/#/g, "")) {
       setInputValue(tagname);
     }
   };
