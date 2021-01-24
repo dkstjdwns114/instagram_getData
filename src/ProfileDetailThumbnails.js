@@ -56,7 +56,9 @@ export default function ProfileDetailThumbnails({
       <p>평균 좋아요 : {avgLikeCnt.toFixed(1)}개</p>
       <p>
         최고 좋아요 : {greatestLikeCntPost}개{" -> "}
-        <a href={"/postDetail/" + greatestLikePostShortcode}>[게시물 링크]</a>
+        <a target="_blank" href={"/postDetail/" + greatestLikePostShortcode}>
+          [게시물 링크]
+        </a>
       </p>
       <p>평균 댓글 : {avgCommentCnt.toFixed(1)}개</p>
       <p>평균 작성 시각(일) : {avgDateCnt.toFixed(0)}일</p>

@@ -155,7 +155,7 @@ export default function UsernamePost({ match }) {
   } else if (loading && pageCnt !== null) {
     return <div>{pageCnt} 페이지 로딩중...</div>;
   }
-  if (error) {
+  if (match.path.substr(1, 10) !== "postDetail" && error) {
     return (
       <>
         <h1>
