@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const imageSize = {
   width: "293px",
@@ -11,24 +12,24 @@ export default function HashtagDetailThumbnails({ imgArr, shortcode }) {
   imgArr.forEach((thumbnailImage, index) => {
     (index + 1) % 3 === 0
       ? thumbnailList.push(
-          <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
+          <Link key={shortcode[index]} to={"/postDetail/" + shortcode[index]}>
             <img
               src={thumbnailImage}
               style={imageSize}
               alt={`${index + 1}번 이미지`}
             />
             <br />
-          </a>
+          </Link>
         )
       : thumbnailList.push(
           <>
-            <a key={shortcode[index]} href={"/postDetail/" + shortcode[index]}>
+            <Link key={shortcode[index]} to={"/postDetail/" + shortcode[index]}>
               <img
                 src={thumbnailImage}
                 style={imageSize}
                 alt={`${index + 1}번 이미지`}
               />
-            </a>
+            </Link>
             <span> </span>
           </>
         );

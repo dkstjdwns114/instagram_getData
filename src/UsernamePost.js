@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import MainFeed from "./MainFeed";
 import ProfileDetail from "./ProfileDetail";
@@ -62,13 +63,7 @@ export default function UsernamePost({ match }) {
 
   const sendTagname = (e) => {
     setSearchUsername(inputValue);
-    setInputValue(searchUsername);
-    if (
-      match.path.substr(1, 13) === "profileDetail" ||
-      match.path.substr(1, 10) === "postDetail"
-    ) {
-      document.location.href = `/profileDetail/${inputValue}`;
-    }
+    document.location.assign(`/profileDetail/${inputValue}`);
   };
 
   const handleInputChange = (e) => {
@@ -84,6 +79,23 @@ export default function UsernamePost({ match }) {
     }
   };
 
+  const SearchUser = (
+    <>
+      <p>↓검색하고싶은 인스타그램 아이디를 입력하세요↓</p>
+      <p>
+        <input
+          type="text"
+          name="getUsername"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={onEnterPress}
+          placeholder="아이디를 입력하세요"
+        />
+        <input type="button" value="Submit" onClick={sendTagname} />
+      </p>
+    </>
+  );
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -92,11 +104,10 @@ export default function UsernamePost({ match }) {
         setLoading(true);
         if (match.path === "/") {
           response = await axios.get(
-            // 타임라인 가져오는 url (인터넷으로 들어가면 들어가지는데 데이터는 null로 나와서 적용 못함)
-            // `https://www.instagram.com/graphql/query/?query_hash=c699b185975935ae2a457f24075de8c7`
-            `https://www.instagram.com/${searchUsername}/?__a=1`
+            `https://www.instagram.com/sooyaaa__/?__a=1`
           );
-          setInputValue(searchUsername);
+          setInputValue("sooyaaa__");
+          setSearchUsername("sooyaaa__");
         } else if (match.params.shortcode !== undefined) {
           response = await axios.get(
             `https://www.instagram.com/p/${match.params.shortcode}/?__a=1`
@@ -148,7 +159,7 @@ export default function UsernamePost({ match }) {
       setLoading(false);
     };
     fetchUsers();
-  }, [searchUsername]);
+  }, [match.url]);
 
   if (loading && pageCnt == null) {
     return <div>로딩중..</div>;
@@ -159,9 +170,11 @@ export default function UsernamePost({ match }) {
     return (
       <>
         <h1>
-          <a href="/">HOME</a> <a href="/HashTag/블랙핑크">해시태그 검색하기</a>
+          <a href="/">HOME</a>{" "}
+          <Link to="/HashTag/블랙핑크">해시태그 검색하기</Link>
         </h1>
         <h2>존재하지 않는 아이디 입니다.</h2>
+        {SearchUser}
       </>
     );
   }
@@ -170,9 +183,10 @@ export default function UsernamePost({ match }) {
       <>
         <h1>
           <a href="/">HOME</a>{" "}
-          <a href="/HashTag/미스코리아">해시태그 검색하기</a>
+          <Link to="/HashTag/미스코리아">해시태그 검색하기</Link>
         </h1>
         <h2>비공개 아이디는 조회가 불가능합니다.</h2>
+        {SearchUser}
       </>
     );
   }
@@ -329,6 +343,9 @@ export default function UsernamePost({ match }) {
     typeof jsonData !== "string" &&
     match.params.shortcode !== undefined
   ) {
+    if (jsonData.graphql.user !== undefined) {
+      window.location.reload();
+    }
     jsonGraphql = Object.values(jsonData.graphql);
     username = jsonGraphql[0].owner.username;
     profileImg = jsonGraphql[0].owner.profile_pic_url;
@@ -356,7 +373,10 @@ export default function UsernamePost({ match }) {
 
     // 댓글
     ovJsonParentComment.forEach((edges, idx) => {
-      comments.push({ id: edges.node.owner.username, reply: edges.node.text });
+      comments.push({
+        id: edges.node.owner.username,
+        reply: edges.node.text
+      });
     });
 
     if (!isAlonePost) {
@@ -384,24 +404,13 @@ export default function UsernamePost({ match }) {
 
   return (
     <>
-      <p>↓검색하고싶은 인스타그램 아이디를 입력하세요↓</p>
-      <p>
-        <input
-          type="text"
-          name="getUsername"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={onEnterPress}
-          placeholder="아이디를 입력하세요"
-        />
-        <input type="button" value="Submit" onClick={sendTagname} />
-      </p>
+      {SearchUser}
       <br />
       {(function () {
         if (typeof jsonData !== "string" && jsonData !== null) {
           if (match.path === "/") {
             if (searchUsername === undefined) {
-              setSearchUsername("undefined");
+              setSearchUsername("sooyaaa__");
             }
             return (
               <>

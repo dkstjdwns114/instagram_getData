@@ -107,7 +107,15 @@ export default function HashtagPost({ match }) {
   }, [tagname]);
 
   if (loading) return <div>로딩중..</div>;
-  if (error) return <div>Error.. (IP 차단됨)</div>;
+  if (error)
+    return (
+      <>
+        <p>
+          <a href="/">HOME</a>
+        </p>
+        <h2>Error.. (IP 차단됨)</h2>
+      </>
+    );
   if (!jsonData) {
     return null;
   } else {

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Like from "./Like";
 import Profile from "./Profile";
 import PostDetailReplies from "./PostDetailReplies";
@@ -19,7 +20,7 @@ export default function PostDetail({
   return (
     <div>
       <h1>
-        <a href="/">HOME</a> <a href="/HashTag/수영복">HashTag</a>
+        <Link to="/">HOME</Link> <Link to="/HashTag/수영복">HashTag</Link>
       </h1>
       <Profile profile_image={profileImg} username={username} />
       <ThumbnailContents thumbnails={thumbnails} />

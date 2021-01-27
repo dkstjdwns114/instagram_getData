@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Profile from "./Profile";
 import ThumbnailText from "./ThumbnailText";
 import ThumbnailContents from "./ThumbnailContents";
@@ -32,7 +33,7 @@ export default function MainFeed({
         않습니다.
       </h5>
       <h1>
-        <a href="/HashTag/블랙핑크">해시태그 검색하기</a>
+        <Link to="/HashTag/블랙핑크">해시태그 검색하기</Link>
       </h1>
       <h2>Instagram Feed</h2>
       {ovEdges.map((node, index) => {
@@ -40,7 +41,7 @@ export default function MainFeed({
           <div key={index} style={{ borderBottom: "1px solid gray" }}>
             <Profile profile_image={profileImg} username={username} />
             <ThumbnailContents thumbnails={thumbnails[index]} />
-            <a href={"/postDetail/" + shortcode[index]}>게시물 상세보기</a>
+            <Link to={"/postDetail/" + shortcode[index]}>게시물 상세보기</Link>
             <br />
             <br />
             <ThumbnailText content={tnContents[index]} />
