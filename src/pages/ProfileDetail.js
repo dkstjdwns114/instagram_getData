@@ -1,6 +1,6 @@
 import React from "react";
-import Profile from "./Profile";
-import ProfileDetailThumbnails from "./ProfileDetailThumbnails";
+import Profile from "../components/Common/Profile";
+import ProfileDetailThumbnails from "../components/Profile/ProfileDetailThumbnails";
 import { Link } from "react-router-dom";
 
 export default function ProfileDetail({

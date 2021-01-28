@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Profile from "./Profile";
-import ThumbnailText from "./ThumbnailText";
-import ThumbnailContents from "./ThumbnailContents";
-import Like from "./Like";
-import Save from "./Save";
-import MainFeedReplies from "./MainFeedReplies";
+import Profile from "../components/Common/Profile";
+import ThumbnailText from "../components/Post/ThumbnailText";
+import ThumbnailContents from "../components/Post/ThumbnailContents";
+import Like from "../components/Common/Like";
+import Save from "../components/Common/Save";
+import MainFeedReplies from "../components/Mainfeed/MainFeedReplies";
 
 export default function MainFeed({
   ovEdges,

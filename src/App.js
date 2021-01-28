@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HashtagPost from "./HashtagPost";
-import UsernamePost from "./UsernamePost";
+import HashtagPost from "./pages/HashtagPost";
+import UsernamePost from "./components/UserGetData/UsernamePost";
 
 class App extends Component {
   render() {

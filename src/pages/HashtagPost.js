@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import HashtagDetailThumbnails from "./HashtagDetailThumbnails";
+import HashtagDetailThumbnails from "../components/Hashtag/HashtagDetailThumbnails";
+import { Link } from "react-router-dom";
 
 export default function HashtagPost({ match }) {
   const [jsonData, setData] = useState(null);
@@ -50,12 +51,17 @@ export default function HashtagPost({ match }) {
   let avgText = 0;
 
   const sendTagname = (e) => {
-    if (match.params.hashtag !== inputValue.replace(/#/g, "")) {
-      setTagname(inputValue.replace(/#/g, ""));
-      setInputValue(tagname);
-      document.location.href = `/Hashtag/${inputValue.replace(/#/g, "")}`;
-    } else if (match.params.hashtag === inputValue.replace(/#/g, "")) {
-      setInputValue(tagname);
+    let replaceString = inputValue.replace(/#/g, "");
+    let cleanString = replaceString.replace(/(\s*)/g, "");
+    if (
+      match.params.hashtag !== replaceString &&
+      match.params.hashtag !== cleanString
+    ) {
+      setTagname(cleanString);
+      setInputValue(cleanString);
+      document.location.href = `/Hashtag/${cleanString}`;
+    } else {
+      setInputValue(cleanString);
     }
   };
 
@@ -110,10 +116,10 @@ export default function HashtagPost({ match }) {
   if (error)
     return (
       <>
-        <p>
-          <a href="/">HOME</a>
-        </p>
-        <h2>Error.. (IP 차단됨)</h2>
+        <h1>
+          <Link to="/">HOME</Link>
+        </h1>
+        <h2>Error 또는 IP 차단됨</h2>
       </>
     );
   if (!jsonData) {

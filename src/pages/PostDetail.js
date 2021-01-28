@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Like from "./Like";
-import Profile from "./Profile";
-import PostDetailReplies from "./PostDetailReplies";
-import ThumbnailContents from "./ThumbnailContents";
-import ThumbnailText from "./ThumbnailText";
-import Save from "./Save";
+import Like from "../components/Common/Like";
+import Profile from "../components/Common/Profile";
+import PostDetailReplies from "../components/Post/PostDetailReplies";
+import ThumbnailContents from "../components/Post/ThumbnailContents";
+import ThumbnailText from "../components/Post/ThumbnailText";
+import Save from "../components/Common/Save";
 
 export default function PostDetail({
   profileImg,

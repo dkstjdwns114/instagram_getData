@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import MainFeed from "./MainFeed";
-import ProfileDetail from "./ProfileDetail";
-import PostDetail from "./PostDetail";
+import MainFeed from "../../pages/MainFeed";
+import ProfileDetail from "../../pages/ProfileDetail";
+import PostDetail from "../../pages/PostDetail";
 
 export default function UsernamePost({ match }) {
   const [jsonData, setData] = useState(null);
