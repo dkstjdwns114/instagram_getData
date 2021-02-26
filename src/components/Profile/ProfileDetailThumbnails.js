@@ -62,9 +62,6 @@ export default function ProfileDetailThumbnails({
         </a>
       </p>
       <p>평균 댓글 : {avgCommentCnt.toFixed(1)}개</p>
-      <p>평균 작성 시각(일) : {avgDateCnt.toFixed(0)}일</p>
-      <p>평균 작성 시각(시) : {avgHoursCnt.toFixed(0)}시</p>
-      <p>평균 작성 시각(분) : {avgMinutesCnt.toFixed(0)}분</p>
       {thumbnailList}
     </div>
   );

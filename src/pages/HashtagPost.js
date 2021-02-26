@@ -233,10 +233,6 @@ export default function HashtagPost({ match }) {
         <p>* 받아온 게시물 기준 *</p>
         <p>평균 좋아요 : {topAvgLike.toFixed(1)}개</p>
         <p>평균 댓글 : {topAvgComment.toFixed(1)}개</p>
-        <p>평균 작성 시각(월) : {avgMonth.toFixed(0)}월</p>
-        <p>평균 작성 시각(일) : {avgDate.toFixed(0)}일</p>
-        <p>평균 작성 시각(시) : {avgHours.toFixed(0)}시</p>
-        <p>평균 작성 시각(분) : {avgMinutes.toFixed(0)}분</p>
         <p>평균 해시태그 갯수 : {topAvgHashtag.toFixed(0)}개</p>
         <HashtagDetailThumbnails
           imgArr={topThumbnails}
